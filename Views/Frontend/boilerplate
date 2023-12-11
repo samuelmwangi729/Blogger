@@ -1,0 +1,5 @@
+<%- include('../../Layouts/Frontend/Header.ejs') %>
+<div>
+    <!-- main body content goes here -->
+</div>
+<%- include('../../Layouts/Frontend/Footer.ejs') %>
