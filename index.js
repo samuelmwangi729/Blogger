@@ -15,4 +15,4 @@ const server = app.listen(PORT,()=>{
 })
 
 
-modules.export = server 
+module.exports = server 
