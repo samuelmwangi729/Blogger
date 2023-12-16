@@ -1,14 +1,14 @@
 const {Router} = require('express')
-const {Home} = require('../Controller/HomeController.js')
+const {Home,About,Contact,Login,Logout,Reset,Register,Passwords} = require('../Controller/HomeController.js')
 
 const homeRouter = Router()
 
 homeRouter.get('/',Home)
-.get('/About',(req,res)=>{
-    res.render('Frontend/About')
-})
-.get("/Contact",(req,res)=>{
-    res.render('Frontend/Contact')
-})
-
+.get('/About',About)
+.get('/Logout',Logout)
+.get('/Contact',Contact)
+.get('/Login',Login)
+.get('/Register',Register)
+.get('/Reset',Reset)
+.get('/UpdatePassword',Passwords)
 module.exports = homeRouter

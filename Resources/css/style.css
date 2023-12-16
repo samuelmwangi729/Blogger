@@ -261,12 +261,17 @@ table th {
 	padding: 8px;
 	text-align: center;
 }
-
+h6#errorText{
+	font-size: 12px !important;
+}
 /*===== Input Textarea =====*/
+textarea{
+	background-color: white !important;
+	border: 1px solid black !important;
+}
 input,
 input.form-control {
-	background: var(--grey-color);
-	border: 1px solid var(--grey-color);
+	border: 1px solid black !important;
 	color: var(--dark-color);
 	width: 100%;
 	float: left;
@@ -280,7 +285,9 @@ input.form-control {
 	transition: all 0.5s ease-in-out;
 	transition: all 0.5s ease-in-out;
 }
-
+input.form-control:focus{
+	outline: none;
+}
 input:focus,
 input:hover,
 textarea:focus,
@@ -3329,7 +3336,7 @@ Breadcrumb
 ================================================*/
 
 .pq-breadcrumb {
-	padding: 130px 0;
+	padding: 20px 0;
 	position: relative;
 	text-align: center;
 }

@@ -1,0 +1,70 @@
+<%- include('../../Layouts/Frontend/Header.ejs') %>
+<div>
+    <!-- main body content goes here -->
+    <div class="row">
+        <div class="col-sm-6 offset-sm-3">
+            <div class="form-group">
+                <form>
+                    <fieldset class="border border-danger rounded">
+                        <legend>
+                            <h2 class="text-center">
+                                Create An Account With Us
+                            </h2>
+                        </legend>
+                        <div class="card border-0">
+                            <div class="card-body">
+                                <div class="row">
+                                    <h6 class="text-danger" id="errorText">Error Message</h6>
+                                    <div class="col-sm-6">
+                                        <div class="form-group">
+                                            <label for="First Name" class="label-control">First Name</label>
+                                            <input type="text" name="FirstName" id="firstName" class="form-control border" placeholder="Enter your First Name">
+                                        </div>
+                                    </div>
+                                    <div class="col-sm-6">
+                                        <div class="form-group">
+                                            <label for="First Name" class="label-control">Last Name</label>
+                                            <input type="text" name="LastName" id="lastName" class="form-control border" placeholder="Enter your Last Name">
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-sm-12">
+                                        <label for="Email Address" class="label-control">Email Address</label>
+                                        <input type="email" name="emailAddress" id="email" class="form-control" placeholder="Enter your Email Address">
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-sm-6">
+                                        <div class="form-group">
+                                            <label for="Password" class="label-control">Password</label>
+                                            <input type="password" name="Password" id="password" class="form-control border" placeholder="Enter your Password Here">
+                                        </div>
+                                    </div>
+                                    <div class="col-sm-6">
+                                        <div class="form-group">
+                                            <label for="Confirm Password" class="label-control">Confirm Password</label>
+                                            <input type="password" name="confirmPassword" id="ConfirmPassworrd" class="form-control border" placeholder="Confirm Your Password Here">
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-sm-4 offset-sm-4">
+                                            <button type="submit" class="btn btn-primary btn-block btn-sm">
+                                                Create Account
+                                            </button>
+                                        </div>
+                                        <div class="d-flex justify-content-between">
+                                            <a href="/Login">Already Registered? Sign In</a>
+                                            <a href="/Reset">Forgot Password?</a>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </fieldset>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+<%- include('../../Layouts/Frontend/Footer.ejs') %>
