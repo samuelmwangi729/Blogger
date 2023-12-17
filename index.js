@@ -2,7 +2,7 @@ const express = require('express')
 const fileupload = require('express-fileupload')
 const cookieParser = require('cookie-parser')
 const homeRouter = require('./Routes/Home')
-
+const ConnectToMongo = require('./Utils/DatabaseConnector')
 const app = express()
 //let the server run on port 8080
 
@@ -17,7 +17,10 @@ app.use(express.static('Resources'))
 const server  = app.listen(
     process.env.PORT || 8080,
     () => {
+        console.log("=================================")
+        ConnectToMongo()
         console.log('Server running on port 8080')
+        console.log("=================================")
     }
 )
 
