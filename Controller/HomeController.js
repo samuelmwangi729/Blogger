@@ -36,12 +36,12 @@ Register_user = async (req, res) =>{
     let isPassSame = check_Pass(password,confirmPassword)
     if(isPassSame){
         //check if the user already exists
-        const user  = await User.countDocuments({ emailAddress: emailAddress})
-        if(user>0){
+        const user  = await User.findOne({ emailAddress: emailAddress})
+        if(user){
             //th user exists 
             res.status(400).json({
                 status:'error',
-                message:'Passwords Do not match',
+                message:'User already Registered',
                 code:400
             })
         }else{
