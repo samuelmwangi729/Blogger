@@ -4,7 +4,7 @@
     <div class="row">
         <div class="col-sm-6 offset-sm-3">
             <div class="form-group">
-                <form>
+                <form id="registerForm">
                     <fieldset class="border border-danger rounded">
                         <legend>
                             <h2 class="text-center">
@@ -14,37 +14,37 @@
                         <div class="card border-0">
                             <div class="card-body">
                                 <div class="row">
-                                    <h6 class="text-danger" id="errorText">Error Message</h6>
+                                    <h6 class="text-danger" id="errorText"></h6>
                                     <div class="col-sm-6">
                                         <div class="form-group">
                                             <label for="First Name" class="label-control">First Name</label>
-                                            <input type="text" name="FirstName" id="firstName" class="form-control border" placeholder="Enter your First Name">
+                                            <input type="text" name="FirstName" id="firstName" class="form-control" placeholder="Enter your First Name" autocomplete="off">
                                         </div>
                                     </div>
                                     <div class="col-sm-6">
                                         <div class="form-group">
                                             <label for="First Name" class="label-control">Last Name</label>
-                                            <input type="text" name="LastName" id="lastName" class="form-control border" placeholder="Enter your Last Name">
+                                            <input type="text" name="LastName" id="lastName" class="form-control border" placeholder="Enter your Last Name" autocomplete="off">
                                         </div>
                                     </div>
                                 </div>
                                 <div class="row">
                                     <div class="col-sm-12">
                                         <label for="Email Address" class="label-control">Email Address</label>
-                                        <input type="email" name="emailAddress" id="email" class="form-control" placeholder="Enter your Email Address">
+                                        <input type="email" name="emailAddress" id="email" class="form-control" placeholder="Enter your Email Address" autocomplete="off">
                                     </div>
                                 </div>
                                 <div class="row">
                                     <div class="col-sm-6">
                                         <div class="form-group">
                                             <label for="Password" class="label-control">Password</label>
-                                            <input type="password" name="Password" id="password" class="form-control border" placeholder="Enter your Password Here">
+                                            <input type="password" name="Password" id="password" class="form-control border" autocomplete="off" placeholder="Enter your Password Here">
                                         </div>
                                     </div>
                                     <div class="col-sm-6">
                                         <div class="form-group">
                                             <label for="Confirm Password" class="label-control">Confirm Password</label>
-                                            <input type="password" name="confirmPassword" id="ConfirmPassworrd" class="form-control border" placeholder="Confirm Your Password Here">
+                                            <input type="password" name="confirmPassword" id="ConfirmPassworrd" autocomplete="off" class="form-control border" placeholder="Confirm Your Password Here">
                                         </div>
                                     </div>
                                    <div class="row mb-2">
@@ -73,3 +73,79 @@
     </div>
 </div>
 <%- include('../../Layouts/Frontend/Footer.ejs') %>
+<script>
+    const form = document.querySelector("form#registerForm")
+    const errorText = document.querySelector("h6#errorText")
+    form.addEventListener("submit",async (e)=>{
+        errorText.textContent = ""
+        document.querySelector('input#firstName').classList.remove("errorClass")
+        document.querySelector('input#lastName').classList.remove("errorClass")
+        document.querySelector('input#email').classList.remove("errorClass")
+        document.querySelector('input#password').classList.remove("errorClass")
+        document.querySelector('input#ConfirmPassworrd').classList.remove("errorClass")
+        e.preventDefault();
+        //submit the form 
+        const firstName = form.FirstName.value;
+        const LastName = form.LastName.value;
+        const emailAddress = form.emailAddress.value;
+        const Password = form.Password.value;
+        const confirmPassword = form.confirmPassword.value;
+        const formData = new FormData()
+        if(!firstName){
+            errorText.textContent = "First Name Is required"
+            document.querySelector('input#firstName').classList.add("errorClass")
+            return;
+        }
+        if(!LastName){
+            errorText.textContent = "Last Name Is required"
+            document.querySelector('input#lastName').classList.add("errorClass")
+            return;
+        }
+        if(!emailAddress){
+            errorText.textContent = "The Email is required"
+            document.querySelector('input#email').classList.add("errorClass")
+            return;
+        }
+        if(!Password){
+            errorText.textContent = "The Password is required"
+            document.querySelector('input#password').classList.add("errorClass")
+            return;
+        }
+        if(!confirmPassword){
+            errorText.textContent = "The confirm Password is required"
+            document.querySelector('input#ConfirmPassworrd').classList.add("errorClass")
+            return;
+        }
+
+        if(Password===confirmPassword){
+            form.reset()
+            //post the data 
+            const resp = await fetch("/user-Register",{
+                method:'POST',
+                body:JSON.stringify({
+                    "firstName": firstName,
+                    "lastName": LastName,
+                    "emailAddress":emailAddress,
+                    "password":Password,
+                    "confirmPassword":confirmPassword,
+                }),
+                headers:{
+                    'Content-Type': 'application/json'
+                }
+            })
+            const res = await resp.json()
+            if(res.status==='success'){
+                setTimeout(()=>{
+                    location.href = "/Login"
+                },4000)
+            }
+            swal(res.status,res.message,res.status)
+
+        }else{
+            document.querySelector('input#password').classList.add("errorClass")
+            document.querySelector('input#ConfirmPassworrd').classList.add("errorClass")
+            errorText.textContent = "Passwords Do not Match"
+        }
+
+    })
+</script>

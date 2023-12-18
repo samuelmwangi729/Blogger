@@ -288,12 +288,15 @@ input.form-control {
 input.form-control:focus{
 	outline: none;
 }
+input.errorClass{
+	border:1px solid red !important;
+}
 input:focus,
 input:hover,
 textarea:focus,
 textarea:hover,
 .form-control:focus {
-	border-color: var(--primary-color) !important;
+	border-color: black !important;
 	outline: none;
 }
 

@@ -2,9 +2,9 @@
 <div>
     <!-- main body content goes here -->
     <div class="row">
-        <div class="col-sm-6 offset-sm-3">
+        <div class="col-md-6 col-sm-8 offset-sm-2 offset-md-3">
             <div class="form-group">
-                <form>
+                <form id="loginForm">
                     <fieldset class="border border-danger rounded">
                         <legend>
                             <h2 class="text-center">
@@ -13,19 +13,26 @@
                         </legend>
                         <div class="card border-0">
                             <div class="card-body">
+                                <h6 class="text-danger" id="errorText"></h6>
                                 <div class="row">
                                     <div class="col-sm-12">
                                         <label for="Email Address" class="label-control">Email Address</label>
-                                        <input type="email" name="emailAddress" id="email" class="form-control" placeholder="Enter your Email Address">
+                                        <input type="email" name="emailAddress" id="email" class="form-control" autocomplete="off" placeholder="Enter your Email Address">
                                     </div>
                                 </div>
                                 <div class="row">
                                     <div class="col-sm-12">
                                         <div class="form-group">
                                             <label for="Password" class="label-control">Password</label>
-                                            <input type="password" name="Password" id="password" class="form-control border" placeholder="Enter your Password Here">
+                                            <input type="password" name="Password" id="password" class="form-control border" autocomplete="off" placeholder="Enter your Password Here">
                                         </div>
                                     </div>
+                                    <div class="row mb-2">
+                                        <div class="col-sm-12">
+                                            <input type="checkbox" name="RememberMe" id="rememberMe">
+                                            <label for="checkbox" class="label-control">Remember me For 30 days</label>
+                                        </div>
+                                   </div>
                                     <div class="row mb-2">
                                         <div class="col-sm-6 offset-sm-3">
                                             <div class="g-recaptcha" data-sitekey="6Le7IDQpAAAAADi_Igd9ohqPzxjVvOvdUdLIF-XI"></div>
@@ -52,3 +59,43 @@
     </div>
 </div>
 <%- include('../../Layouts/Frontend/Footer.ejs') %>
+<script>
+    const form = document.querySelector("form#loginForm")
+    form.addEventListener("submit", async(e)=>{
+        document.querySelector("h6#errorText").textContent = ""
+        document.querySelector('input#email').classList.remove("errorClass")
+        document.querySelector('input#password').classList.remove("errorClass")
+        e.preventDefault();
+        const email = form.emailAddress.value
+        const Password = form.Password.value
+        const RememberMe = form.RememberMe.value
+        console.log(RememberMe)
+        if(!email){
+            document.querySelector("h6#errorText").textContent = "Email Address is required"
+            document.querySelector('input#email').classList.add("errorClass")
+            return;
+        }
+        if(!Password){
+            document.querySelector("h6#errorText").textContent = "Email Address is required"
+            document.querySelector('input#password').classList.add("errorClass")
+            return;
+        }
+        const resp = await fetch("/login-user",{
+            method:'POST',
+            body:JSON.stringify({
+                email,Password,RememberMe
+            }),
+            headers:{
+                'Content-Type':'application/json'
+            }
+        })
+        const res = await resp.json()
+        swal(res.status,res.message,res.status)
+        if(res.status==='success'){
+            setTimeout(()=>{
+                location.href="/Dashboard"
+            },4000)
+        }
+
+    })
+</script>

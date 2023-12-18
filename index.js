@@ -2,6 +2,7 @@ const express = require('express')
 const fileupload = require('express-fileupload')
 const cookieParser = require('cookie-parser')
 const homeRouter = require('./Routes/Home')
+const AuthenticatedRoutes = require('./Routes/AuthenticatedRoutes')
 const ConnectToMongo = require('./Utils/DatabaseConnector')
 const app = express()
 //let the server run on port 8080
@@ -13,6 +14,7 @@ app.use(fileupload())
 app.set('view engine','ejs')
 app.set('views','Views')
 app.use(homeRouter)
+app.use(AuthenticatedRoutes)
 app.use(express.static('Resources'))
 const server  = app.listen(
     process.env.PORT || 8080,
