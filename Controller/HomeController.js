@@ -125,7 +125,7 @@ get_reset_password = async(req,res)=>{
         await newToken.save()
         res.status(200).json({
             status:'success',
-            message:'Email Sent'
+            message:'If the Account exists, An email has been sent with your reset password'
         })
     }else{
         res.status(400).json({
@@ -145,29 +145,47 @@ GetToken = async(req, res)=>{
     res.redirect("/")
    }
    else{
-    res.locals.Resettoken = userToken
-    res.locals.email=tokenExists.email
+    res.cookie('Resettoken',userToken,{httpOnly:true,maxAge:0.1*24*60*60*1000})
     res.redirect("/UpdatePassword")
    }
 }
 getNewPasswords = async(req, res)=>{
+    const ResetToken = req.cookies.Resettoken
     const {Password,confirmPassword} = req.body
-    const user = await User.findOne({emailAddress:res.locals.email})
-    const tokenActive = await Token.findOne({token:res.locals.Resettoken,Status:'Active'})
-    if(tokenActive){
-        if(check_Pass(Password,confirmPassword)){
-            //the two passwords are the same
-            //update them
-            user.Password = await getEncryptedPassword(Password)
-            await user.save()
-            tokenActive.Status="Used"
-            tokenActive.save()
-            res.redirect("/Login")
+    const tokenActive = await Token.findOne({token:ResetToken,Status:'Active'})
+    if(!tokenActive){
+        res.status(400).json({
+            status:'error',
+            message:'Password Could not be updated. Try resetting Again'
+        })
+    }
+    else{
+        const user = await User.findOne({emailAddress:tokenActive.user})
+        if(tokenActive){
+            if(check_Pass(Password,confirmPassword)){
+                //the two passwords are the same
+                //update them
+                user.Password = await getEncryptedPassword(Password)
+                await user.save()
+                tokenActive.Status="Used"
+                tokenActive.save()
+                res.cookie('Resettoken','',{httpOnly:true,maxAge:10})
+                res.status(200).json({
+                    status:'success',
+                    message:'Password Updated'
+                })
+            }else{
+                res.status(422).json({
+                    status:'error',
+                    message:'Your passwords do not match'
+                })
+            }
         }else{
-            res.redirect("/")
+            res.status(400).json({
+                status:'error',
+                message:'Unknown Error Occurred'
+            })
         }
-    }else{
-        res.redirect("/")
     }
     
 }
