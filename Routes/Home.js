@@ -1,5 +1,5 @@
 const {Router} = require('express')
-const {Home,About,Contact,Login,Logout,Reset,Register,Passwords,Register_user,Login_User} = require('../Controller/HomeController.js')
+const {Home,About,Contact,Login,Logout,Reset,Register,Passwords,getNewPasswords,Register_user,Login_User,get_reset_password,GetToken} = require('../Controller/HomeController.js')
 const isGuest = require('../Middlewares/Guest.js')
 const homeRouter = Router()
 
@@ -13,4 +13,7 @@ homeRouter.get('/',Home)
 .get('/UpdatePassword',Passwords)
 .post("/user-Register",Register_user)
 .post("/login-user",Login_User)
+.post("/reset-password",get_reset_password)
+.get("/Password-Reset-Token/:userToken",GetToken)
+.post("/get-new-posted-password",getNewPasswords)
 module.exports = homeRouter
