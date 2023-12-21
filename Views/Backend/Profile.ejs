@@ -6,18 +6,45 @@
             <div class="col-sm-4">
                 <div class="card">
                     <div class="card-header text-center">
-                        Prodile Information
+                        Profile Information
                     </div>
                     <img src="/img/user.png" class="card-img-top m-2 px-2 py-2" height="80px" alt="...">
                     <div class="card-body">
+                        <div class="text-center">
+
+                            <span class="text-bold text-black text-center">
+                                <%= user.FirstName %> <%= user.LastName %> <img src="/img/verified.png" style="width: 15px !important;margin-top:-8px;margin-left:-4px">
+                            </span>
+                        </div>
+                        <h5 class="text-center text-bold">
+                            Biography
+                        </h5>
                         <p class="text-justify">
                             Lorem, ipsum dolor sit amet consectetur adipisicing elit. Voluptate labore quas eveniet deserunt iste et. 
                             Reprehenderit blanditiis rem magni, aut architecto perspiciatis animi fugiat? Esse labore eum dignissimos architecto laborum.
                         </p>
+                        <h5 class="text-center text-bold underline">
+                            Skills
+                        </h5>
+                        <span class="badge text-bg-secondary">
+                            Verified <i data-feather="x" class="text-xs text-white" style="border:none;border-left:1px solid white"></i>
+                        </span>
+                        <span class="badge text-bg-secondary">
+                            Verified <i data-feather="x" class="text-xs text-white" style="border:none;border-left:1px solid white"></i>
+                        </span>
+                        <span class="badge text-bg-secondary">
+                            Verified <i data-feather="x" class="text-xs text-white" style="border:none;border-left:1px solid white"></i>
+                        </span>
+                        <span class="badge text-bg-secondary">
+                            Verified <i data-feather="x" class="text-xs text-white" style="border:none;border-left:1px solid white"></i>
+                        </span>
+                        <span class="badge text-bg-secondary">
+                            Verified <i data-feather="x" class="text-xs text-white" style="border:none;border-left:1px solid white"></i>
+                        </span>
                     </div>
                     <div class="card-footer">
-                        <span class="badge text-bg-success">
-                            Verified <i data-feather="check-square" class="text-lg text-white"></i>
+                        <span class="badge text-bg-danger">
+                            Delete Profile <i data-feather="x" class="text-lg text-white"></i>
                         </span>
                     </div>
                 </div>
@@ -26,6 +53,14 @@
                 <h3 class="text-center">
                     Fill In the Form Below
                 </h3>
+                <div class="form-group">
+                    <form>
+                        <div class="form-group">
+                            <label for="" class="label-control">Nick Name</label>
+                            <input type="text" name="FirstName" id="LastName" class="form-control">
+                        </div>
+                    </form>
+                </div>
             </div>
         </div>
     </div>

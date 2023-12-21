@@ -43,8 +43,6 @@ span.more-information{
 .card img{
     width: 80px !important;
     align-self: center !important;
-    border: 1px solid gray !important;
-    border-radius: 50px;
 }
 .text-success{
     color: #4ee44e !important;
