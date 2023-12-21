@@ -1,11 +1,7 @@
 const {Router} = require('express')
 const AuthenticatedRoutes = Router()
+const {Index} = require('../Controller/AuthenticatedController')
 const {isLoggedIn,loggedInUser} = require('../Middlewares/Authentication')
-AuthenticatedRoutes.get("/Dashboard", isLoggedIn,loggedInUser,(req, res) => {
-    res.json({
-        message:'dashboard',
-        user:res.locals.user
-    })
-})
+AuthenticatedRoutes.get("/Dashboard", isLoggedIn,loggedInUser,Index)
 
 module.exports = AuthenticatedRoutes

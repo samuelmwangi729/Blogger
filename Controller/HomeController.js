@@ -44,7 +44,7 @@ Register_user = async (req, res) =>{
             //th user exists 
             res.status(400).json({
                 status:'error',
-                message:'User already Registered',
+                message:'User already Registered. Use a different email address',
                 code:400
             })
         }else{
