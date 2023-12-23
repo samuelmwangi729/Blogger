@@ -12,7 +12,18 @@ isLoggedIn = async(req,res,next)=>{
         res.redirect("/")
     }
 }
-
+isLoggedInApi = async(req,res,next)=>{
+    //check if the token exists 
+    let token = req.cookies.jwt
+    if(token){
+        //verify if the token is genuine
+        verifyTKNApi(token,req,res,next)
+    }else{
+        res.json({
+            "message":"UnAuthorised Requst"
+        })
+    }
+}
 loggedInUser = async(req,res,next)=>{
 let token = req.cookies.jwt
 if(token){
@@ -22,7 +33,18 @@ if(token){
     next()
 }
 }
-
+verifyTKNApi = async(tkn, req,res,next)=>{
+    jwt.verify(tkn,process.env.TOKEN_SECRET_KEY,(err,decodedToken)=>{
+        if(err){
+            res.cookie("jwt","",{maxAge:10})
+            res.json({
+                message:"UnAuthorised Request"
+            })
+        }else{
+            next()
+        }
+    })
+}
 verifyTKN = async(tkn, req,res,next)=>{
     jwt.verify(tkn,process.env.TOKEN_SECRET_KEY,(err,decodedToken)=>{
         if(err){
@@ -52,4 +74,4 @@ VerifyAndGetUser = async(tkn, req,res,next)=>{
         }
     })
 }
-module.exports = {isLoggedIn,loggedInUser}
+module.exports = {isLoggedIn,loggedInUser,isLoggedInApi}

@@ -5,4 +5,9 @@ const Index = async (req, res)=>{
 Profile = async(req,res)=>{
     res.render('Backend/Profile')
 }
-module.exports = {Index,Profile}
+const getProfileData = async(req,res)=>{
+    const {DisplayName,XProfile,Skills,Country,DoB,Bio} = req.body
+    const ProfilePicture = req.files
+    console.log(req.body)
+}
+module.exports = {Index,getProfileData,Profile}
