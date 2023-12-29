@@ -4,50 +4,85 @@
     <div class="container">
         <div class="row mt-2">
             <div class="col-sm-4">
+                <% if(profile){ %>
                 <div class="card">
                     <div class="card-header text-center">
                         Profile Information
                     </div>
-                    <img src="/img/user.png" class="card-img-top m-2 px-2 py-2" height="80px" alt="...">
+                    <img src="/Uploads/<%= profile.ProfilePicture %>" class="card-img-top m-2 px-2 py-2" height="100px" alt="...">
                     <div class="card-body">
                         <div class="text-center">
 
                             <span class="text-bold text-black text-center">
-                                <%= user.FirstName %> <%= user.LastName %> <img src="/img/verified.png" style="width: 15px !important;margin-top:-8px;margin-left:-4px">
+                                <%= user.FirstName %> <%= user.LastName %> 
+                                <% if(user.AccountStatus==='Verified'){ %>
+                                <img src="/img/verified.png" style="width: 15px !important;margin-top:-8px;margin-left:-4px">
+                                <%}else{ %>
+                                    <sup>
+                                        <span class="text-sm text-white bg-danger p-1"> Not Verified</span>
+                                    </sup>
+                                <%}%>
                             </span>
                         </div>
                         <h5 class="text-center text-bold">
                             Bio
                         </h5>
-                        <p class="text-justify">
-                            Lorem, ipsum dolor sit amet consectetur adipisicing elit. Voluptate labore quas eveniet deserunt iste et. 
-                            Reprehenderit blanditiis rem magni, aut architecto perspiciatis animi fugiat? Esse labore eum dignissimos architecto laborum.
+                        <p class="text-justify" id="textBio" data-bio="<%= profile.Bio %>">
                         </p>
-                        <h5 class="text-center text-bold underline">
-                            Skills
-                        </h5>
-                        <span class="badge text-bg-secondary">
-                            Verified <i data-feather="x" class="text-xs text-white" style="border:none;border-left:1px solid white"></i>
-                        </span>
-                        <span class="badge text-bg-secondary">
-                            Verified <i data-feather="x" class="text-xs text-white" style="border:none;border-left:1px solid white"></i>
-                        </span>
-                        <span class="badge text-bg-secondary">
-                            Verified <i data-feather="x" class="text-xs text-white" style="border:none;border-left:1px solid white"></i>
-                        </span>
-                        <span class="badge text-bg-secondary">
-                            Verified <i data-feather="x" class="text-xs text-white" style="border:none;border-left:1px solid white"></i>
-                        </span>
-                        <span class="badge text-bg-secondary">
-                            Verified <i data-feather="x" class="text-xs text-white" style="border:none;border-left:1px solid white"></i>
-                        </span>
+                        <div class="row d-flex align-items-center justify-content-between border-top">
+                            <div class="col-sm-6 text-center">
+                                <h6 class="text-bold underline">
+                                    Country
+                                </h6>
+                                <span class="badge text-bg-secondary">
+                                    <%= profile.Country %>
+                                </span>
+                            </div>
+                            <div class="col-sm-6 text-center">
+                                <h6 class="text-center text-bold underline">
+                                    Twitter
+                                </h6>
+                                <span class="text-black">
+                                    <a href="http://twitter.com/<%= profile.twitter %>" referrerpolicy="no-referrer" target="_blank" class="p-2 bg-success text-white">
+                                        Follow Me
+                                    </a>
+                                </span>
+                            </div>
+                        </div>
                     </div>
                     <div class="card-footer">
-                        <span class="badge text-bg-danger">
-                            Delete Profile <i data-feather="x" class="text-lg text-white"></i>
-                        </span>
+                        <div class="row">
+                            <div class="col-sm-6">
+                                <h6 class="text-center text-bold underline">
+                                    Member Since
+                                </h6>
+                                <span class="badge text-bg-secondary">
+                                    <%= profile.createdAt.toISOString().split("T")[0] %>
+                                </span>
+                            </div>
+                            <div class="col-sm-6">
+                                <% if(user.AccountStatus==='Verified'){ %>
+                                    <%}else{ %>
+                                        <sup>
+                                            <span class="text-sm text-white bg-danger p-1"> 
+                                              <a href="/Verify/Account" class="text-white">Verify Account Now</a>
+                                            </span>
+                                        </sup>
+                                    <%}%>
+                            </div>
+                        </div>
                     </div>
                 </div>
+                <%} else {%>
+                   <div class="card">
+                    <img src="/img/user.png" class="card-img-top m-2 px-2 py-2" height="80px" alt="...">
+                    <div class="card-body">
+                        <div class="alert alert-danger bg-danger text-white">
+                            <strong>Error!</strong> Create Your Profile
+                        </div>
+                    </div>
+                   </div>
+                <%} %>
             </div>
             <div class="col-sm-8">
                 <p class="text-center">
@@ -71,8 +106,9 @@
                         <div class="row">
                             <div class="col-sm-12">
                                 <div class="form-group">
-                                    <label for="Skills" class="label-control">Skills</label>
-                                    <select id="select-gear" name="Skills"  multiple placeholder="Select Skills (Max 5 skills)">
+                                    <label for="Skills" class="label-control">Professional Field</label>
+                                    <select id="select-gear" name="Skills">
+                                            <option label="--Select Field Here--"></option>
                                             <option value="pitons">Pitons</option>
                                             <option value="cams">Cams</option>
                                             <option value="nuts">Nuts</option>
@@ -89,7 +125,7 @@
                         <div class="row">
                             <div class="col-sm-6">
                                 <label for="Country" class="label-control">Country</label>
-                                <select name="Country" class="form-control">
+                                <select name="Country" class="form-control" id="country">
                                     <option label="--select country--"></option>
                                     <option value="AF">Afghanistan</option>
                                     <option value="AX">&Aring;land Islands</option>
@@ -348,21 +384,23 @@
                             </div>
                         </div>
                         <div class="row">
-                            <div class="form-group">
-                                <label for="Bio" class="label-control">Bio</label>
-                                <textarea name="Bio" id="bio" class="form-control"></textarea>
-                            </div>
-                        </div>
-                        <div class="row">
                             <div class="col-sm-12">
                                 <label for="Profile Picture" class="label-control">Profile Picture</label>
                                 <input type="file" name="ProfilePicture" id="" class="form-control" accept="image/*">
                             </div>
                         </div>
+                        <div class="row">
+                            <div class="form-group">
+                                <label for="Bio" class="label-control">Bio</label>
+                                <textarea name="Bio" id="bio" class="form-control" s></textarea>
+                            </div>
+                        </div>
                         <div class="row mb-3">
+                           <div class="col-sm-12 mt-3">
                             <button class="btn btn-block btn-primary" type="submit">
                                 Submit
                             </button>
+                           </div>
                         </div>
                     </form>
                     <div class="row">
@@ -375,29 +413,29 @@
 </div>
 <%- include('../../Layouts/Backend/Footer.ejs') %>
 <script>
+let editor;
  $(function () {
-    $("#select-gear").selectize({ maxItems: 5 });
     ClassicEditor
         .create( document.querySelector( '#bio' ) ,{
             placeholder: 'Please type your Bio Here',
+        }).then(newEditor=>{
+            editor = newEditor;
         })
         .catch( error => {
             console.error( error );
         } );
   });
-</script>
-<script>
-    const form  = document.querySelector('form#profileForm');
+  const form  = document.querySelector('form#profileForm');
     form.addEventListener('submit', async (e) => {
         document.querySelector('#profileError').classList.remove("alert-danger")
-            document.querySelector('#profileError').textContent = ""
+        document.querySelector('#profileError').textContent = ""
         e.preventDefault()
         const  DisplayName = form.DisplayName.value
         const XProfile = form.XProfile.value
         const Skills = form.Skills.value
         const Country = form.Country.value
         const DoB = form.DoB.value
-        const  Bio = form.Bio.value
+        const  Bio = editor.getData();
         const ProfilePicture = form.ProfilePicture.files
         if( !DisplayName){
             document.querySelector('#profileError').classList.add("alert-danger")
@@ -434,22 +472,38 @@
             document.querySelector('#profileError').textContent = "ProfilePicture  is Required"
             return;
         }
-        const formdata = new FormData();
-        formdata.append("DisplayName", DisplayName);
-        
+        const formData = new FormData();
+        formData.append("DisplayName", DisplayName);
+        formData.append("XProfile", XProfile);
+        formData.append("Skills", Skills);
+        formData.append("Country", Country);
+        formData.append("DoB", DoB);
+        formData.append("Bio", Bio);
+        for(let i=0;i<ProfilePicture.length;i++){
+            formData.append("ProfilePicture", ProfilePicture[i]);
+        }
         const res = await fetch("/get-profile-data",{
             method:'POST',
-            data:formdata
+            body:formData
         })
         const data = await res.json()
         if(data.status==='success'){
             document.querySelector('#profileError').classList.remove("alert-danger")
             document.querySelector('#profileError').classList.add("alert-success")
-            document.querySelector('#profileError').textContent = data.message
+            document.querySelector('#profileError').textContent = `${data.message}. Redirecting....`
             form.reset()
+            editor.setData("");
+            setTimeout(()=>{
+                location.href=location.href
+            },3000)
         }else{
             document.querySelector('#profileError').classList.add("alert-danger")
             document.querySelector('#profileError').textContent = "ProfilePicture  is Required"
         }
+    })
+</script>
+<script>
+    window.addEventListener('load', function () {
+        document.querySelector('p#textBio').innerHTML = document.querySelector('p#textBio').getAttribute('data-bio')
     })
 </script>

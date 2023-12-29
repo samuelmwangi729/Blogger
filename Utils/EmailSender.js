@@ -2,17 +2,19 @@ const nodemailer = require("nodemailer");
 require("dotenv").config();
 const sendEmail = async (to,subject,code,type="Verification") => {
 	let message=""
+  let Link=`${process.env.DOMAIN_NAME}/Verify/User/Account/${code}`
   let preheader = ""
-	if(type == "verification"){
+	if(type == "Verification"){
     preheader="<strong>Please Verify your account with TechPoint.</strong>"
 	}else{
+    Link=`${process.env.DOMAIN_NAME}/Password-Reset-Token/${code}`
     preheader="<strong>Please Reset Your password In your Account</strong>"
 	}
   try {
     //create transport
     const transporter = nodemailer.createTransport({
-      host: "smtp.gmail.com",
-      port: 465,
+      host: process.env.SMTP_HOST,
+      port: process.env.SMTP_PORT,
       secure: true, // true for 465, false for other ports
       auth: {
         user: process.env.GMAIL_USERNAME, // generated ethereal user
@@ -165,7 +167,7 @@ const sendEmail = async (to,subject,code,type="Verification") => {
           <!-- start copy -->
           <tr>
             <td align="left" bgcolor="#ffffff" style="padding: 24px; font-family: 'Rajdhani', sans-serif; font-size: 16px; line-height: 24px;">
-              <p style="margin: 0;">Tap the button below to reset your account password. If you didn't request a new password,
+              <p style="margin: 0;">Tap the button below to ${subject}. If you didn't request this,
                you can safely delete this email.</p>
             </td>
           </tr>
@@ -180,7 +182,7 @@ const sendEmail = async (to,subject,code,type="Verification") => {
                     <table border="0" cellpadding="0" cellspacing="0">
                       <tr>
                         <td align="center" bgcolor="#fe4536" >
-                          <a href="http://localhost/Password-Reset-Token/${code}" target="_blank" style="display: inline-block; padding: 16px 36px; 
+                          <a href="${Link}" target="_blank" style="display: inline-block; padding: 16px 36px; 
                           font-family: 'Rajdhani', sans-serif; font-size: 16px; color: #ffffff; text-decoration: none; ">${subject}</a>
                         </td>
                       </tr>
@@ -196,7 +198,7 @@ const sendEmail = async (to,subject,code,type="Verification") => {
           <tr>
             <td align="left" bgcolor="#ffffff" style="padding: 24px; font-family: 'Rajdhani', sans-serif; font-size: 16px; line-height: 24px;">
               <p style="margin: 0;">If that doesn't work, copy and paste the following link in your browser:</p>
-              <p style="margin: 0;"><a href="http://localhost/Password-Reset-Token/${code}" target="_blank">http://localhost/Password-Reset-Token/${code}</a></p>
+              <p style="margin: 0;"><a href="${Link}" target="_blank">${Link}</a></p>
             </td>
           </tr>
           <!-- end copy -->

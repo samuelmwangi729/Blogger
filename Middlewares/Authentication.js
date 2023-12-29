@@ -1,7 +1,7 @@
 require('dotenv').config()
 const jwt  = require('jsonwebtoken')
 const User = require('../Models/Users')
-
+const url = require('url')
 isLoggedIn = async(req,res,next)=>{
     //check if the token exists 
     let token = req.cookies.jwt
@@ -69,8 +69,19 @@ VerifyAndGetUser = async(tkn, req,res,next)=>{
                 updatedAt:0,
                 __v:0
             })
+            //check if the user is verified
+            //if not, redirect here 
             res.locals.user = user
-            next()
+            if(user.AccountStatus==='Verified'){
+                next()
+            }else{
+                if(req.url==="/Verify/Account"){
+                    next()
+                }
+                else{
+                    res.redirect("/Verify/Account")
+                }
+            }
         }
     })
 }

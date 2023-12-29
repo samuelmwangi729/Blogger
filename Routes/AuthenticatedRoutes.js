@@ -1,9 +1,11 @@
 const {Router} = require('express')
 const AuthenticatedRoutes = Router()
 const fileupload = require('express-fileupload')
-const {Index,Profile,getProfileData} = require('../Controller/AuthenticatedController')
+const {Index,ProfileController,getProfileData,VerifyAccount,getVerificationToken} = require('../Controller/AuthenticatedController')
 const {isLoggedIn,loggedInUser,isLoggedInApi} = require('../Middlewares/Authentication')
 AuthenticatedRoutes.get("/Dashboard", isLoggedIn,loggedInUser,Index)
-.get("/User/Profile", isLoggedIn,loggedInUser,Profile)
+.get("/User/Profile", isLoggedIn,loggedInUser,ProfileController)
+.get("/Verify/Account", isLoggedIn,loggedInUser,VerifyAccount)
+.get("/Verify/User/Account/:verificationToken", isLoggedIn,getVerificationToken)
 .post("/get-profile-data", isLoggedInApi,loggedInUser,fileupload({createParentPath:true}),getProfileData)
 module.exports = AuthenticatedRoutes
