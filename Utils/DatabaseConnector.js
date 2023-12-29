@@ -3,7 +3,7 @@ require('dotenv').config()
 //connect to the mongo database
 const ConnectToMongo = async ()=>{
     let dbUrl =""
-    if(process.env.NODE_ENV === 'production'){
+    if(process.env.PROJECT_URL === 'production'){
         dbUrl = process.env.PROD_DB_URL
     }else{
         dbUrl = process.env.DEV_DB_URL

@@ -41,12 +41,8 @@ Register_user = async (req, res) =>{
         //check if the user already exists
         const user  = await User.findOne({ emailAddress: emailAddress})
         if(user){
+            throw new Error("User already exists")
             //th user exists 
-            res.status(400).json({
-                status:'error',
-                message:'User already Registered. Use a different email address',
-                code:400
-            })
         }else{
             //create the user 
             const newUser = new User({
