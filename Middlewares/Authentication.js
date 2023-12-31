@@ -20,7 +20,7 @@ isLoggedInApi = async(req,res,next)=>{
         verifyTKNApi(token,req,res,next)
     }else{
         res.json({
-            "message":"UnAuthorised Requst"
+            "message":"UnAuthorised Request"
         })
     }
 }

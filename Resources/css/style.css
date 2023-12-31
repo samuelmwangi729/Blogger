@@ -90,8 +90,13 @@ Moz Selection
 	background: var(--primary-color);
 	color: #fff;
 }
-
-
+*{
+	font-family: 'Times New Roman', Times, serif !important;
+}
+.is-invalid{
+	border:1px !important;
+	border-color: #dc3545 !important;
+}
 /*================================================ 
     General
 ================================================*/
@@ -288,8 +293,11 @@ input.form-control {
 input.form-control:focus{
 	outline: none;
 }
-input.errorClass{
+.errorClass{
 	border:1px solid red !important;
+}
+.errorSelect{
+	border:1px solid red !important
 }
 input:focus,
 input:hover,

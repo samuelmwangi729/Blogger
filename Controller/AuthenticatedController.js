@@ -4,6 +4,8 @@ const User = require("../Models/Users.js")
 const Token = require('../Models/Tokens.js')
 const sendEmail = require("../Utils/EmailSender.js")
 const generateRandom =  require('../Utils/genRandom.js')
+const {Category} = require('../Models/Category.js')
+const RemoveFile = require('../Utils/RemoveFile.js')
 const Index = async (req, res)=>{
     res.render('Backend/Index')
 }
@@ -14,13 +16,13 @@ ProfileController = async(req,res)=>{
 }
 const getProfileData = async(req,res)=>{
     const {DisplayName,XProfile,Skills,Country,DoB,Bio} = req.body
-    const ProfilePicture = UploadImage(req.files.ProfilePicture)  
     try{
         //check if the profile existed 
         const profileExists = await Profile.findOne({userEmail:res.locals.user.emailAddress})
-        console.log(profileExists)
         if(profileExists){
             //update the profile 
+            RemoveFile(profileExists.ProfilePicture)
+            const ProfilePicture = UploadImage(req.files.ProfilePicture)  
             profileExists.userEmail = res.locals.user.emailAddress
             profileExists.username = DisplayName
             profileExists.twitter = XProfile
@@ -38,6 +40,7 @@ const getProfileData = async(req,res)=>{
             })
         }else{
             //create the profile
+            const ProfilePicture = UploadImage(req.files.ProfilePicture)
             const userProfile = new Profile({
                 userEmail: res.locals.user.emailAddress,
                 username:DisplayName,
@@ -78,8 +81,6 @@ VerifyAccount = async(req,res)=>{
 }
 const getVerificationToken = async(req,res)=>{
     const {verificationToken} = req.params
-    console.log(verificationToken)
-    console.log(req.url)
     //check if the token exists  in the database
     const tokenExists = await Token.findOne({
      token:verificationToken,
@@ -98,4 +99,90 @@ const getVerificationToken = async(req,res)=>{
      res.redirect("/User/Profile")
     }
 }
-module.exports = {Index,getProfileData,ProfileController,getVerificationToken,VerifyAccount}
+Categories = async(req,res)=>{
+    const categories= await Category.find()
+    res.render("Backend/Blog/Categories",{categories:categories})
+}
+getUploadedCategories = async (req,res)=>{
+    const {CategoryName,CategoryType} = req.body
+    const {CategoryIcon} = req.files
+    //upload the file and get the filename 
+    const fileName = UploadImage(CategoryIcon)
+    //first check if the category exists  
+    const categoryExists = await Category.findOne({categoryName:CategoryName})
+    try{
+        if(categoryExists) {
+            //get the categoryId 
+            let catId = categoryExists?._id
+            const category = await Category.findById(catId)
+            const NewFileName = UploadImage(CategoryIcon)
+            //category exists andwe need to update it
+            category.categoryName = CategoryName
+            category.Type=CategoryType
+            category.categoryIcon = NewFileName
+            await category.save()
+            res.status(200).json({
+                status:'success',
+                message:'Category Successfully Updated',
+            })
+        }else{
+            const category = new Category({
+                categoryName:CategoryName,
+                categoryIcon:fileName,
+                categoryType:CategoryType,
+            })
+            await category.save()
+            res.status(200).json({
+                status:'success',
+                message:'Category Successfully Saved',
+            })
+        }
+    }catch(err){
+        res.status(400).json({
+            status:'error',
+            message:'Error Saving category',
+        })
+    }
+}
+const PropagateEvent = async (req, res)=>{
+    //get the event and the ID from the frontend
+    const {ID,ACTION} = req.body
+    const category = await Category.findById(ID)
+    if(!category){
+        res.status(422).json({
+            status:'error',
+            message:'Unknown Error Occurred',
+        })
+    }else{
+        //check the action 
+        if(ACTION==='Activat'){
+            category.categoryStatus='Active'
+            await category.save()
+            res.status(200).json({
+            status:'success',
+            message:`Category ${ACTION}ed Successfully`,
+        })
+        }else if(ACTION==='Delet'){
+            RemoveFile(category.categoryIcon)
+            await Category.findByIdAndDelete(ID)
+            res.status(200).json({
+            status:'success',
+            message:`Category ${ACTION}ed Successfully`,
+        })
+        }else if(ACTION==='Suspend'){
+            category.categoryStatus='Inactive'
+            await category.save()
+            res.status(200).json({
+            status:'success',
+            message:`Category ${ACTION}ed Successfully`,
+        })
+        }else{
+            res.status(422).json({
+                status:'error',
+                message:`Action Could not be performed`,
+            })
+        }
+        
+    }
+}
+module.exports = {Index,getProfileData,ProfileController,PropagateEvent,getUploadedCategories,getVerificationToken,VerifyAccount,Categories}

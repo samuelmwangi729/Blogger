@@ -1,0 +1,200 @@
+<%- include('../../../Layouts/Backend/Header.ejs') %>
+<div>
+    <!-- main body content goes here -->
+    <div class="container border-top p-2">
+        <div class="row">
+            <div class="col-sm-4">
+                <div class="card">
+                    <div class="card-header bg-white">
+                        <h2 class="text-center">
+                            Create New Category
+                        </h2>
+                    </div>
+                    <div class="card-body">
+                        <div class="form">
+                            <form id="categoriesForm" enctype="multipart/form-data">
+                                <span id="errorSpan" class="text-danger"></span>
+                                <div class="form-group">
+                                    <label for="Category Name" class="label-control">Category Name</label>
+                                    <input type="text" name="CategoryName" id="CategoryName" class="form-control">
+                                </div>
+                                <div class="form-group">
+                                    <label for="Category Icon" class="label-control">Category Icon</label>
+                                    <input type="file" name="CategoryIcon" id="CategoryIcon" class="form-control" accept="image/*">
+                                </div>
+                                <div class="form-group">
+                                    <label for="Category Type" class="label-control">Category Type</label>
+                                    <select name="CategoryType" id="CategoryType" class="form-control">
+                                        <option label="--select Category Type"></option>
+                                        <option value="Blog">Blog</option>
+                                        <option value="Product">Product</option>
+                                        <option value="Others">Others</option>
+                                    </select>
+                                </div>
+                                <div class="row">
+                                    <div class="col-sm-6 offset-sm-3">
+                                        <button class="btn btn-success btn-block mt-2" type="submit">Add Category</button>
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!--Display the categories in the remaining part of the page-->
+            <div class="col-sm-8">
+                <div class="card">
+                    <div class="card-header">
+                        <h3 class="text-center">
+                            Available Categories
+                        </h3>
+                    </div>
+                    <div class="card-body">
+                        <div class="table-responsive">
+                            <table class="table table-condensed table-bordered table-stripped">
+                                <thead>
+                                    <tr>
+                                        <th>Icon</th>
+                                        <th>Category</th>
+                                        <th>Type</th>
+                                        <th>Status</th>
+                                        <th>Actions</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <% if(categories.length<=0){%>
+                                        <tr>
+                                            <td colspan="5">
+                                                <div class="alert alert-danger bg-danger text-white">
+                                                    <strong>Error!!</strong>No categories available.
+                                                </div>
+                                            </td>
+                                        </tr>
+                                    <%}else{%>
+                                        <% categories.map(item=>{ %>
+                                            <tr>
+                                                <td>
+                                                    <img src="/Uploads/<%= item.categoryIcon %>" alt="<%= item.categoryName %>" title="<%= item.categoryName %>" style="width:40px !important">
+                                                </td>
+                                                <td>
+                                                    <%= item.categoryName %>
+                                                </td>
+                                                <td>
+                                                    <%= item.categoryType %>
+                                                </td>
+                                                <td>
+                                                    <% if(item.categoryStatus==='Active'){%>
+                                                        <span class="badge bg-warning">
+                                                            <%= item.categoryStatus %>
+                                                        </span>
+                                                    <%}else{%>
+                                                        <span class="badge bg-danger">
+                                                            <%= item.categoryStatus %>
+                                                        </span>
+                                                    <%}%>
+                                                </td>
+                                                <td>
+                                                    <% if(item.categoryStatus==='Active'){%>
+                                                        <span class="badge bg-danger" onclick="Propagate('<%= item?._id %>','Suspend')">
+                                                            Suspend
+                                                        </span>
+                                                    <%}else{%>
+                                                        <span class="badge bg-warning" onclick="Propagate('<%= item?._id %>','Activat')">
+                                                            Activate
+                                                        </span>
+                                                    <%}%>
+                                                    <span class="badge bg-primary" onclick="Propagate('<%= item?._id %>','Delet')">
+                                                        Delete
+                                                    </span>
+                                                </td>
+                                            </tr>
+                                        <%})%>
+                                    <%}%>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<%- include('../../../Layouts/Backend/Footer.ejs') %>
+<script>
+    const form = document.querySelector("form#categoriesForm")
+    const errorClass = document.querySelector("span#errorSpan")
+    form.addEventListener("submit",async (e)=>{
+        errorClass.textContent = ""
+        e.preventDefault();
+        const CategoryName = form.CategoryName.value
+        const CategoryIcon = form.CategoryIcon.files
+        const CategoryType = form.CategoryType.value
+        if(!CategoryName){
+            errorClass.textContent = "The Category Name is required"
+            document.querySelector("input#CategoryName").classList.add("is-invalid")
+            document.querySelector("input#CategoryName").classList.add("errorClass")
+            return;
+        }else{
+            document.querySelector("input#CategoryName").classList.remove("is-invalid")
+            document.querySelector("input#CategoryName").classList.remove("errorClass")
+        }
+        if(CategoryIcon.length<=0){
+            errorClass.textContent = "The Category Icon is required"
+            document.querySelector("input#CategoryIcon").classList.add("is-invalid")
+            document.querySelector("input#CategoryIcon").classList.add("errorClass")
+            return;
+        }else{
+            document.querySelector("input#CategoryIcon").classList.remove("is-invalid")
+            document.querySelector("input#CategoryIcon").classList.remove("errorClass")
+        }
+        if(!CategoryType){
+            errorClass.textContent = "The Category Type is required"
+            document.querySelector("select#CategoryType").classList.add("is-invalid")
+            document.querySelector("select#CategoryType").classList.add("errorSelect")
+            return;
+        }else{
+            document.querySelector("#CategoryType").classList.remove("is-invalid")
+            document.querySelector("#CategoryType").classList.remove("errorSelect")
+        }
+        //submit the data to the backend 
+        const formData = new FormData();
+        formData.append("CategoryName", CategoryName)
+        for(let i=0;i<CategoryIcon.length;i++){
+            formData.append("CategoryIcon", CategoryIcon[i])
+        }
+        formData.append("CategoryType", CategoryType)
+        const res = await fetch("/New/Categories",{
+            method: "POST",
+            body:formData
+        })
+        const resp = await res.json()
+        if(resp.status==='success'){
+            form.reset()
+        }
+        swal(resp.status, `${resp.message}. Reloading...`, resp.status);
+        setTimeout(()=>{
+            location.href= location.href
+        },3000)
+    })
+
+</script>
+<script>
+    const Propagate = async(id,action)=>{
+        //then send the id and the action to the backend
+        const res = await fetch("/PropagateEvent/",{
+            method: "POST",
+            body:JSON.stringify({
+                ID:id,
+                ACTION:action
+            }),
+            headers:{
+                'Content-Type': 'application/json'
+            }
+        })
+        const resp = await res.json()
+        swal(resp.status, `${resp.message}. Reloading...`, resp.status);
+        setTimeout(()=>{
+            location.href= location.href
+        },3000)
+    }
+</script>

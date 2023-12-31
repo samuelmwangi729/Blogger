@@ -1,4 +1,4 @@
-const {schema,model} = require('mongoose')
+const {Schema,model} = require('mongoose')
 
 const CategorySchema = new Schema({
     categoryName:{
@@ -10,10 +10,12 @@ const CategorySchema = new Schema({
         required:[true,'Category Icon is required'],
     },
     categoryType:{
+        type:String,
         enum:['Blog','Product','Others'],
         default:'Blog'
     },
     categoryStatus:{
+        type:String,
         enum:['Active','Inactive'],
         default:'Active'
     },
@@ -29,10 +31,12 @@ const SubCategorySchema = new Schema({
         required:[true,'SubCategory Icon is required'],
     },
     subCategoryType:{
+        type:String,
         enum:['Blog','Product','Others'],
         default:'Blog'
     },
     subCategoryStatus:{
+        type:String,
         enum:['Active','Inactive'],
         default:'Active'
     },

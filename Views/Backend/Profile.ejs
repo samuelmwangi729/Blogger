@@ -467,7 +467,7 @@ let editor;
             document.querySelector('#profileError').textContent = "Bio  is Required"
             return;
         }
-        if( !ProfilePicture){
+        if(ProfilePicture.length<=0){
             document.querySelector('#profileError').classList.add("alert-danger")
             document.querySelector('#profileError').textContent = "ProfilePicture  is Required"
             return;
@@ -498,7 +498,7 @@ let editor;
             },3000)
         }else{
             document.querySelector('#profileError').classList.add("alert-danger")
-            document.querySelector('#profileError').textContent = "ProfilePicture  is Required"
+            document.querySelector('#profileError').textContent = data.message
         }
     })
 </script>
