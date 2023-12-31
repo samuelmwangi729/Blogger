@@ -4,7 +4,7 @@ const User = require("../Models/Users.js")
 const Token = require('../Models/Tokens.js')
 const sendEmail = require("../Utils/EmailSender.js")
 const generateRandom =  require('../Utils/genRandom.js')
-const {Category} = require('../Models/Category.js')
+const {Category,SubCategory} = require('../Models/Category.js')
 const RemoveFile = require('../Utils/RemoveFile.js')
 const Index = async (req, res)=>{
     res.render('Backend/Index')
@@ -101,7 +101,8 @@ const getVerificationToken = async(req,res)=>{
 }
 Categories = async(req,res)=>{
     const categories= await Category.find()
-    res.render("Backend/Blog/Categories",{categories:categories})
+    const subcategories = await SubCategory.find()
+    res.render("Backend/Blog/Categories",{categories:categories,subcategories:subcategories})
 }
 getUploadedCategories = async (req,res)=>{
     const {CategoryName,CategoryType} = req.body
@@ -185,4 +186,30 @@ const PropagateEvent = async (req, res)=>{
         
     }
 }
-module.exports = {Index,getProfileData,ProfileController,PropagateEvent,getUploadedCategories,getVerificationToken,VerifyAccount,Categories}
+const GetSubCategories = async(req,res)=>{
+    let status;
+    let message;
+    let code;
+    const {Category,Subcategory} = req.body
+    //check if the sub category exists 
+    try {
+        code=201
+        //the category does not exist, we create a new one 
+        const scat =  new SubCategory({
+            CategoryName:Category,
+            SubCategory:Subcategory
+        })
+        await scat.save()
+        status='success'
+        message='Sub Category successfully Created'
+    
+    } catch (error) {
+        code=422
+        status="error"
+        message=`${error.message}`
+    }
+    res.status(code).json({
+        status,message
+    })
+}
+module.exports = {Index,getProfileData,ProfileController,GetSubCategories,PropagateEvent,getUploadedCategories,getVerificationToken,VerifyAccount,Categories}

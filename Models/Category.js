@@ -22,18 +22,13 @@ const CategorySchema = new Schema({
 },{timestamps:true})
 
 const SubCategorySchema = new Schema({
-    subCategoryName:{
+    CategoryName:{
         type:String,
-        required:[true,'SubCategory Name is required'],
+        required:[true,'Category Name is required'],
     },
-    subCategoryIcon:{
+    SubCategory:{
         type:String,
-        required:[true,'SubCategory Icon is required'],
-    },
-    subCategoryType:{
-        type:String,
-        enum:['Blog','Product','Others'],
-        default:'Blog'
+        required:[true,'SubCategory  is required'],
     },
     subCategoryStatus:{
         type:String,

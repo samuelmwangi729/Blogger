@@ -40,6 +40,42 @@
                         </div>
                     </div>
                 </div>
+                <div class="card">
+                    <div class="card-header bg-white">
+                        <h2 class="text-center">
+                            Create New Sub Category
+                        </h2>
+                    </div>
+                    <div class="card-body">
+                        <div class="form">
+                            <form id="SubcategoriesForm">
+                                <span id="errorSpan2" class="text-danger"></span>
+                                <div class="form-group">
+                                    <label for="Category Name" class="label-control">Category Name</label>
+                                    <select name="categoryName" id="categoryName">
+                                        <option label="--select Category--"></option>
+                                        <% if(categories){ %>
+                                            <% categories.map(item=>{%>
+                                                <option value="<%= item.categoryName %>"><%= item.categoryName %></option>
+                                            <%})%>
+                                        <%}else{ %>
+                                            <option label="--No Categories Present--"></option>
+                                        <%}%>
+                                    </select>
+                                </div>
+                                <div class="form-group">
+                                    <label for="Category Type" class="label-control">Sub Category</label>
+                                    <input type="text" name="subcategoryName" id="subCategory" class="form-control" placeholder="Add SubCategory">
+                                </div>
+                                <div class="row">
+                                    <div class="col-sm-6 offset-sm-3">
+                                        <button class="btn btn-success btn-block mt-2" type="submit">Add S.Category</button>
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
             </div>
             <!--Display the categories in the remaining part of the page-->
             <div class="col-sm-8">
@@ -86,6 +122,73 @@
                                                     <% if(item.categoryStatus==='Active'){%>
                                                         <span class="badge bg-warning">
                                                             <%= item.categoryStatus %>
+                                                        </span>
+                                                    <%}else{%>
+                                                        <span class="badge bg-danger">
+                                                            <%= item.categoryStatus %>
+                                                        </span>
+                                                    <%}%>
+                                                </td>
+                                                <td>
+                                                    <% if(item.categoryStatus==='Active'){%>
+                                                        <span class="badge bg-danger" onclick="Propagate('<%= item?._id %>','Suspend')">
+                                                            Suspend
+                                                        </span>
+                                                    <%}else{%>
+                                                        <span class="badge bg-warning" onclick="Propagate('<%= item?._id %>','Activat')">
+                                                            Activate
+                                                        </span>
+                                                    <%}%>
+                                                    <span class="badge bg-primary" onclick="Propagate('<%= item?._id %>','Delet')">
+                                                        Delete
+                                                    </span>
+                                                </td>
+                                            </tr>
+                                        <%})%>
+                                    <%}%>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+                <div class="card">
+                    <div class="card-header">
+                        <h3 class="text-center">
+                            Available Sub Categories
+                        </h3>
+                    </div>
+                    <div class="card-body">
+                        <div class="table-responsive">
+                            <table class="table table-condensed table-bordered table-stripped">
+                                <thead>
+                                    <tr>
+                                        <th>Category</th>
+                                        <th>Status</th>
+                                        <th>Actions</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <% if(subcategories.length<=0){%>
+                                        <tr>
+                                            <td colspan="3">
+                                                <div class="alert alert-danger bg-danger text-white">
+                                                    <strong>Error!!</strong>No categories available.
+                                                </div>
+                                            </td>
+                                        </tr>
+                                    <%}else{%>
+                                        <% subcategories.map(item=>{ %>
+                                            <tr>
+                                                <td>
+                                                    <%= item.CategoryName %>
+                                                </td>
+                                                <td>
+                                                    <%= item.SubCategory %>
+                                                </td>
+                                                <td>
+                                                    <% if(item.subCategoryStatus==='Active'){%>
+                                                        <span class="badge bg-warning">
+                                                            <%= item.subCategoryStatus %>
                                                         </span>
                                                     <%}else{%>
                                                         <span class="badge bg-danger">
@@ -197,4 +300,45 @@
             location.href= location.href
         },3000)
     }
+</script>
+<script>
+    const sform = document.querySelector("form#SubcategoriesForm")
+    sform.addEventListener("submit",async(e)=>{
+        e.preventDefault()
+        const sCategory = sform.categoryName.value
+        const subCategory = sform.subcategoryName.value
+        if(!sCategory){
+            document.querySelector("span#errorSpan2").textContent = "Select Category"
+            document.querySelector("#categoryName").classList.add("is-invalid")
+            document.querySelector("#categoryName").classList.add("errorSelect")
+            return
+        }else{
+            document.querySelector("#categoryName").classList.remove("is-invalid")
+            document.querySelector("#categoryName").classList.remove("errorSelect")
+        }
+        if(!subCategory){
+            document.querySelector("span#errorSpan2").textContent = "Sub category field is required"
+            document.querySelector("select#subCategory").classList.add("is-invalid")
+            document.querySelector("#subCategory").classList.add("errorSelect")
+            return;
+        }else{
+            document.querySelector("#subCategory").classList.remove("is-invalid")
+            document.querySelector("#subCategory").classList.remove("errorSelect")
+        }
+        const res = await fetch("/Get/SubCategories",{
+            method:'post',
+            body:JSON.stringify({
+                Category:sCategory,
+                Subcategory:subCategory
+            }),
+            headers:{
+                'Content-Type':'application/json'
+            }
+        })
+        const resp = await res.json()
+        swal(resp.status, `${resp.message}. Reloading...`, resp.status);
+        setTimeout(()=>{
+            location.href= location.href
+        },3000)
+    })
 </script>
