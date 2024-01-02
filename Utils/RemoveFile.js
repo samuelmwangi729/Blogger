@@ -1,4 +1,4 @@
-const  { unlink } = require('node:fs')
+const  { unlink } = require('node:fs/promises')
 const path = require('path')
 // Assuming that 'path/file.txt' is a regular file.
 const RemoveFile = (file)=>{

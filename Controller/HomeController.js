@@ -4,30 +4,72 @@ const sendEmail = require('../Utils/EmailSender')
 const generateJwt = require('../Utils/generateToken')
 const generateRandom =  require('../Utils/genRandom')
 const Token = require('../Models/Tokens')
+const {Category,SubCategory} = require('../Models/Category')
+GetSubCategories = async(categoryName)=>{
+    let sbr =[]
+    let sojb={}
+    const subcategories = await SubCategory.find({CategoryName:categoryName,subCategoryStatus:'Active'},{
+        _id:0,
+        subCategoryStatus:0,
+        __v:0
+    })
+    if(subcategories.length>0){
+        for(let i=0;i<subcategories.length;i++){
+            sbr.push(subcategories[i].SubCategory)
+        }
+        let sojb={...sbr}
+        return sbr
+    }else{
+        return sbr
+    }
+}
+const loadCategories = async ()=>{
+    const categories = await Category.find({categoryStatus:'Active'},{_id:0,
+        categoryIcon:0,
+        categoryType:0,
+        categoryStatus:0,
+        createdAt:0,
+        updatedAt:0,
+        __v:0
+    }).select("categoryName")
+    for(let i=0;i<categories.length;i++){
+        //check if the category has subcategories
+        let subs =await  GetSubCategories(categories[i].categoryName)
+        categories[i].set('subcategories',subs,{strict:false})
+    }
+    return categories
+}
 const Home = async (req, res) => {
-    res.render('Frontend/home')
+    const categories = await loadCategories()
+    res.render('Frontend/home',{categories})
 }
 const About = async (req, res) => {
-    res.render('Frontend/About')
+    const categories = await loadCategories()
+    res.render('Frontend/About',{categories})
 }
 const Contact = async (req, res) => {
-    res.render('Frontend/Contact')
+    const categories = await loadCategories()
+    res.render('Frontend/Contact',{categories})
 }
 const Login = async (req, res) => {
-    res.render('Frontend/Login')
+    const categories = await loadCategories()
+    res.render('Frontend/Login',{categories})
 }
 const Logout = async (req, res) => {
     res.cookie("jwt","",{maxAge:10})
     res.redirect('/')
 }
 const Reset = async (req, res) => {
-    res.render('Frontend/Reset')
+    const categories = await loadCategories()
+    res.render('Frontend/Reset',{categories})
 }
 const Passwords = async (req, res) => {
-    res.render('Frontend/Passwords')
+    const categories = await loadCategories()
+    res.render('Frontend/Passwords',{categories})
 }
 const Register = async (req, res) => {
-    res.render('Frontend/Register')
+    const categories = await loadCategories()
+    res.render('Frontend/Register',{categories})
 }
 Register_user = async (req, res) =>{
     let firstName = req.body.firstName
@@ -190,4 +232,4 @@ getNewPasswords = async(req, res)=>{
     
 }
 
-module.exports = { Home, About, Contact, Login, Logout, Reset, Register, Register_user,GetToken,get_reset_password,Login_User,getNewPasswords, Passwords }
+module.exports = { Home, About, Contact, Login, Logout, Reset, Register, Register_user,GetToken,get_reset_password,Login_User,getNewPasswords, Passwords,loadCategories }

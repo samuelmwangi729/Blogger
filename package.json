@@ -28,6 +28,7 @@
     "mongoose-slug-generator": "^1.0.4",
     "nodemailer": "^6.9.7",
     "nodemon": "^3.0.2",
+    "pm2": "^5.3.0",
     "supertest": "^6.3.3",
     "uuid": "^9.0.1",
     "validator": "^13.11.0"

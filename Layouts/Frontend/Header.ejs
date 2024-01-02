@@ -5,7 +5,7 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>TechPoint: Elevating Your Digital Presence with Cutting-Edge Content Solutions for Unmatched Online Visibility and Success</title>
+    <title><%= apptitle %> : Elevating Your Digital Presence with Cutting-Edge Content Solutions for Unmatched Online Visibility and Success</title>
     <meta name="description" content="TechPoint is a leading technology company, specializing in innovative solutions and cutting-edge technologies. ">
     <meta name="keywords" content="technology, innovation, IT solutions, software development, cutting-edge technologies, TechPoint, Technical Writing, Content Writing">
     <meta name="author" content="TechPoint">
@@ -69,35 +69,28 @@
                             <div class="collapse navbar-collapse" id="navbarSupportedContent">
                                 <div id="pq-menu-contain" class="pq-menu-contain">
                                     <ul id="pq-main-menu" class="navbar-nav ml-auto">
-                                        <li class="menu-item">
-                                            <a href="/About">About Us</a>
-                                        </li>
-                                        <li class="menu-item">
-                                            <a href="#">Services</a><i class="fa fa-chevron-down pq-submenu-icon"></i>
-                                            <ul class="sub-menu">
+                                        <% if(categories.length >0){%>
+                                            <% categories.map(category=>{%>
                                                 <li class="menu-item">
-                                                    <a href="software-development.html">Software Development</a>
+                                                    <a href="/Contact"><%= category.categoryName %></a>
+                                                    <% if(category.toObject().subcategories.length>0){ %>
+                                                        <i class="fa fa-chevron-down pq-submenu-icon"></i>
+                                                        <ul class="sub-menu">
+                                                            <% category.toObject().subcategories.forEach(subcategory=>{%>
+                                                            <li class="menu-item">
+                                                                <a href="software-development.html"><%= subcategory %></a>
+                                                            </li>
+                                                            <% }); %>
+                                                        </ul>
+                                                    <%} %>
+                                                        
+                                                    
                                                 </li>
-                                                <li class="menu-item">
-                                                    <a href="web-development.html">Web Development</a>
-                                                </li>
-                                                <li class="menu-item">
-                                                    <a href="mobile-development.html">Mobile Development</a>
-                                                </li>
-                                                <li class="menu-item">
-                                                    <a href="app-development.html">App Development</a>
-                                                </li>
-                                                <li class="menu-item">
-                                                    <a href="qa-testing.html">QA Testing</a>
-                                                </li>
-                                                <li class="menu-item">
-                                                    <a href="product-design.html">Product Design</a>
-                                                </li>
-                                            </ul>
-                                        </li>
-                                        <li class="menu-item">
-                                            <a href="/Contact">Contact Us</a>
-                                        </li>
+                                            <%})%>
+                                        <%}else{%>
+
+                                            
+                                        <%}%>
                                         <% if(isAuthenticated){ %>
                                             <li class="menu-item">
                                                 <a href="/Dashboard">My Account</a>

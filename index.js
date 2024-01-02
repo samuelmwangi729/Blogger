@@ -4,10 +4,16 @@ const homeRouter = require('./Routes/Home')
 const AuthenticatedRoutes = require('./Routes/AuthenticatedRoutes')
 const ConnectToMongo = require('./Utils/DatabaseConnector')
 const isGuest = require('./Middlewares/Guest.js')
+const {loadCategories} = require("./Controller/HomeController.js")
+require('dotenv').config()
 const app = express()
 const path = require('path')
 //let the server run on port 8080
-
+app.get("*", async (req, res,next) =>{
+    res.locals.apptitle = process.env.APP_TITLE
+    res.locals.categories =[]
+    next()
+})
 app.use(express.urlencoded({extended: true}))
 app.use(express.json())
 app.use(cookieParser())

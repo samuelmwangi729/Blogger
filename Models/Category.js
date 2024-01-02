@@ -19,7 +19,7 @@ const CategorySchema = new Schema({
         enum:['Active','Inactive'],
         default:'Active'
     },
-},{timestamps:true})
+},{timestamps:true,strict:false})
 
 const SubCategorySchema = new Schema({
     CategoryName:{

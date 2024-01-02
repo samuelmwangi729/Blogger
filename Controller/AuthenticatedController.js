@@ -145,10 +145,48 @@ getUploadedCategories = async (req,res)=>{
         })
     }
 }
-const PropagateEvent = async (req, res)=>{
-    //get the event and the ID from the frontend
-    const {ID,ACTION} = req.body
-    const category = await Category.findById(ID)
+WorkOnSubCategories = async(res,id,action)=>{
+    const subCat = await SubCategory.findById(id)
+    if(subCat){
+        //check the actions 
+        if(action==='Activat'){
+            subCat.subCategoryStatus='Active'
+            await subCat.save()
+            res.status(200).json({
+            status:'success',
+            message:`Sub Category ${action}ed Successfully`,
+        })
+        }else if(action==='Delet'){
+            await SubCategory.findByIdAndDelete(id)
+            res.status(200).json({
+            status:'success',
+            message:`Sub Category ${action}ed Successfully`,
+        })
+        }else if(action==='Suspend'){
+            subCat.subCategoryStatus='Inactive'
+            await subCat.save()
+            res.status(200).json({
+            status:'success',
+            message:`Sub Category ${action}ed Successfully`,
+        })
+        }else{
+            res.status(422).json({
+                status:'error',
+                message:`Action Could not be performed`,
+            })
+        }
+        
+
+    }else{
+        //send in unprocessable entity here 
+        res.status(422).json({
+            status:'error',
+            message:'Unprocessable data'
+        })
+    }
+}
+WorkOnCategories = async(res,id,action)=>{
+    const category = await Category.findById(id)
     if(!category){
         res.status(422).json({
             status:'error',
@@ -156,26 +194,26 @@ const PropagateEvent = async (req, res)=>{
         })
     }else{
         //check the action 
-        if(ACTION==='Activat'){
+        if(action==='Activat'){
             category.categoryStatus='Active'
             await category.save()
             res.status(200).json({
             status:'success',
-            message:`Category ${ACTION}ed Successfully`,
+            message:`Category ${action}ed Successfully`,
         })
-        }else if(ACTION==='Delet'){
+        }else if(action==='Delet'){
             RemoveFile(category.categoryIcon)
-            await Category.findByIdAndDelete(ID)
+            await Category.findByIdAndDelete(id)
             res.status(200).json({
             status:'success',
-            message:`Category ${ACTION}ed Successfully`,
+            message:`Category ${action}ed Successfully`,
         })
-        }else if(ACTION==='Suspend'){
+        }else if(action==='Suspend'){
             category.categoryStatus='Inactive'
             await category.save()
             res.status(200).json({
             status:'success',
-            message:`Category ${ACTION}ed Successfully`,
+            message:`Category ${action}ed Successfully`,
         })
         }else{
             res.status(422).json({
@@ -185,6 +223,22 @@ const PropagateEvent = async (req, res)=>{
         }
         
     }
+}
+const PropagateEvent = async (req, res)=>{
+    //get the event and the ID from the frontend
+    const {ID,ACTION,ITEMTYPE} = req.body
+    console.log(req.body)
+    if(ITEMTYPE === 'cat'){
+        WorkOnCategories(res,ID,ACTION)
+
+    }else if (ITEMTYPE === 'subcat'){
+        WorkOnSubCategories(res,ID,ACTION)
+    } else{
+        res.status(404).json({
+            status:'error',
+            message:'Invalid Data Submitted'
+        })
+    }   
 }
 const GetSubCategories = async(req,res)=>{
     let status;

@@ -131,15 +131,15 @@
                                                 </td>
                                                 <td>
                                                     <% if(item.categoryStatus==='Active'){%>
-                                                        <span class="badge bg-danger" onclick="Propagate('<%= item?._id %>','Suspend')">
+                                                        <span class="badge bg-danger" onclick="Propagate('<%= item?._id %>','Suspend','cat')">
                                                             Suspend
                                                         </span>
                                                     <%}else{%>
-                                                        <span class="badge bg-warning" onclick="Propagate('<%= item?._id %>','Activat')">
+                                                        <span class="badge bg-warning" onclick="Propagate('<%= item?._id %>','Activat','cat')">
                                                             Activate
                                                         </span>
                                                     <%}%>
-                                                    <span class="badge bg-primary" onclick="Propagate('<%= item?._id %>','Delet')">
+                                                    <span class="badge bg-primary" onclick="Propagate('<%= item?._id %>','Delet','cat')">
                                                         Delete
                                                     </span>
                                                 </td>
@@ -172,41 +172,41 @@
                                         <tr>
                                             <td colspan="3">
                                                 <div class="alert alert-danger bg-danger text-white">
-                                                    <strong>Error!!</strong>No categories available.
+                                                    <strong>Error!!</strong>No sub categories available.
                                                 </div>
                                             </td>
                                         </tr>
                                     <%}else{%>
-                                        <% subcategories.map(item=>{ %>
+                                        <% subcategories.map(itemc=>{ %>
                                             <tr>
                                                 <td>
-                                                    <%= item.CategoryName %>
+                                                    <%= itemc.CategoryName %>
                                                 </td>
                                                 <td>
-                                                    <%= item.SubCategory %>
+                                                    <%= itemc.SubCategory %>
                                                 </td>
                                                 <td>
-                                                    <% if(item.subCategoryStatus==='Active'){%>
+                                                    <% if(itemc.subCategoryStatus==='Active'){%>
                                                         <span class="badge bg-warning">
-                                                            <%= item.subCategoryStatus %>
+                                                            <%= itemc.subCategoryStatus %>
                                                         </span>
                                                     <%}else{%>
                                                         <span class="badge bg-danger">
-                                                            <%= item.categoryStatus %>
+                                                            <%= itemc.subCategoryStatus %>
                                                         </span>
                                                     <%}%>
                                                 </td>
                                                 <td>
-                                                    <% if(item.categoryStatus==='Active'){%>
-                                                        <span class="badge bg-danger" onclick="Propagate('<%= item?._id %>','Suspend')">
+                                                    <% if(itemc.subCategoryStatus==='Active'){%>
+                                                        <span class="badge bg-danger" onclick="Propagate('<%= itemc?._id %>','Suspend','subcat')">
                                                             Suspend
                                                         </span>
                                                     <%}else{%>
-                                                        <span class="badge bg-warning" onclick="Propagate('<%= item?._id %>','Activat')">
+                                                        <span class="badge bg-warning" onclick="Propagate('<%= itemc?._id %>','Activat','subcat')">
                                                             Activate
                                                         </span>
                                                     <%}%>
-                                                    <span class="badge bg-primary" onclick="Propagate('<%= item?._id %>','Delet')">
+                                                    <span class="badge bg-primary" onclick="Propagate('<%= itemc?._id %>','Delet','subcat')">
                                                         Delete
                                                     </span>
                                                 </td>
@@ -282,13 +282,14 @@
 
 </script>
 <script>
-    const Propagate = async(id,action)=>{
+    const Propagate = async(id,action,itemType)=>{
         //then send the id and the action to the backend
         const res = await fetch("/PropagateEvent/",{
             method: "POST",
             body:JSON.stringify({
                 ID:id,
-                ACTION:action
+                ACTION:action,
+                ITEMTYPE:itemType
             }),
             headers:{
                 'Content-Type': 'application/json'
