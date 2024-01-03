@@ -3,8 +3,9 @@ const cookieParser = require('cookie-parser')
 const homeRouter = require('./Routes/Home')
 const AuthenticatedRoutes = require('./Routes/AuthenticatedRoutes')
 const ConnectToMongo = require('./Utils/DatabaseConnector')
-const isGuest = require('./Middlewares/Guest.js')
-const {loadCategories} = require("./Controller/HomeController.js")
+const blogRoutes = require('./Routes/BlogRoutes')
+const isGuest = require('./Middlewares/Guest')
+const {loadCategories} = require("./Controller/HomeController")
 require('dotenv').config()
 const app = express()
 const path = require('path')
@@ -22,6 +23,7 @@ app.get("*",isGuest)
 app.set('view engine','ejs')
 app.set('views','Views')
 app.use(homeRouter)
+app.use(blogRoutes)
 app.use(AuthenticatedRoutes)
 const server  = app.listen(
     process.env.PORT || 80,
@@ -33,7 +35,8 @@ const server  = app.listen(
     }
 )
 
-app.use((req,res)=>{
-    res.render('404.ejs')
+app.use(async(req,res)=>{
+    const categories = await loadCategories()
+    res.render('404.ejs',{categories})
 })
 module.exports = server
