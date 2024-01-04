@@ -6,8 +6,10 @@ const ConnectToMongo = require('./Utils/DatabaseConnector')
 const blogRoutes = require('./Routes/BlogRoutes')
 const isGuest = require('./Middlewares/Guest')
 const {loadCategories} = require("./Controller/HomeController")
+const helmet = require('helmet')
 require('dotenv').config()
 const app = express()
+app.use(helmet())
 const path = require('path')
 //let the server run on port 8080
 app.get("*", async (req, res,next) =>{
