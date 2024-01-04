@@ -293,11 +293,23 @@ input.form-control {
 input.form-control:focus{
 	outline: none;
 }
-.errorClass{
+input.errorClass{
 	border:1px solid red !important;
+}
+input.successClass{
+	border:1px solid green !important;
 }
 .errorSelect{
 	border:1px solid red !important
+}
+.successSelect{
+	border:1px solid green !important;
+}
+textarea.errorTextarea{
+	border:1px solid red !important
+}
+textarea.successArea{
+	border:1px solid green !important;
 }
 input:focus,
 input:hover,

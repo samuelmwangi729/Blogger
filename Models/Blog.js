@@ -1,15 +1,13 @@
 const {Schema,model} = require('mongoose')
-const mongoose = require('mongoose')
-let slug = require('mongoose-slug-generator')
-mongoose.plugin('slug')
-let defaultDate=""
+const mongoose  = require('mongoose')
+const slug = require('mongoose-slug-generator')
+mongoose.plugin(slug)
 const BlogSchema = new Schema({
     Title:{
         type:String,
     },
     Slug:{
         type:String,
-        slug:'Title'
     },
     FeaturedImage:{
         type:String,
@@ -24,6 +22,7 @@ const BlogSchema = new Schema({
         required:[true,'Category is required'],
     },
     blogStatus:{
+        type:String,
         enum:['Published','Pending','Suspended','Removed','Deleted'],
         default:'Pending'
     },
@@ -31,27 +30,10 @@ const BlogSchema = new Schema({
         type:String,
         required:[true,'Author is required'],
     },
-    schedulePublish:{
-        type:Boolean,
-        enum:['true','false'],
-        default:false
-    },
     publishDate:{
         type:Date,
-        default:defaultDate
+        default:Date.now()
     }
 },{timestamps:true})
-BlogSchema.pre("save",(next)=>{
-    this.Slug = this.Title.split(" ").join("-")
-    next()
-})
-BlogSchema.pre("save",(next)=>{
-    if(this.schedulePublish===false){
-        this.publishDate = defaultDate
-    }else{
-        this.publishDate = Date.now()
-    }
-    next()
-})
 const Blog = model('Blog',BlogSchema)
 module.exports = Blog

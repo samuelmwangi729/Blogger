@@ -1,5 +1,305 @@
 <%- include('../../../Layouts/Backend/Header.ejs') %>
 <div>
     <!-- main body content goes here -->
+    <div class="container">
+        <div class="row">
+            <div class="col-sm-5">
+                <div class="card bg-white">
+                    <div class="card-header">
+                        <h2 class="text-center">
+                            Available Articles
+                        </h2>
+                    </div>
+                    <div class="card-body">
+                        <div class="table-responsive">
+                            <table class="table table-border table-condensed table-hover">
+                                <thead>
+                                    <tr>
+                                        <th>S/No</th>
+                                        <th>Featured Image</th>
+                                        <th>Title</th>
+                                        <th>Status</th>
+                                        <th>Actions</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <% if(articles.length > 0) { %>
+                                        <% let num =1; articles.map(article =>{%>
+                                            <tr>
+                                                <td>
+                                                    <%= num %>
+                                                </td>
+                                                <td>
+                                                    <img src="/Uploads/<%= article.FeaturedImage %>" alt="<%= article.Title %>" style="width:50px !important">
+                                                </td>
+                                                <td class="text-sm"><%= article.Title %></td>
+                                                <td>
+                                                    <% if(article.blogStatus==='Active') { %>
+                                                        <span class="badge badge-success bg-success">
+                                                            <%= article.blogStatus%>
+                                                        </span>
+                                                    <%}else { %>
+                                                        <span class="badge badge-warning bg-warning">
+                                                            <%= article.blogStatus%>
+                                                        </span>
+                                                    <%} %>
+                                                </td>
+                                                <td>
+                                                    <span class="badge badge-warning bg-danger">
+                                                        Delete
+                                                    </span>
+                                                    <span class="badge badge-warning bg-warning">
+                                                        Suspend
+                                                    </span>
+                                                    <span class="badge badge-warning bg-primary">
+                                                        Edit
+                                                    </span>
+                                                </td>
+                                            </tr>
+                                        <%  num = num+1 })%>
+                                    <%}else{ %>
+                                        <tr>
+                                            <td colspan="4">
+                                                <div class="alert bg-warning">
+                                                    <p>No Articles to Display</p>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                    <% } %>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-sm-7">
+                <div class="card">
+                    <div class="card-header">
+                        <h3 class="text-center">
+                            Add Article
+                        </h3>
+                    </div>
+                    <div class="card-body">
+                        <form id="articleForm" enctype="multipart/form-data">
+                            <div class="text-danger text-center" id="errorClass">
+                            </div>
+                            <div class="row">
+                                <div class="form-group">
+                                    <label for="Title" class="label-control">Title</label>
+                                    <input type="text" name="ArticleTitle" id="ArticleTitle" class="form-control">
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-sm-6">
+                                    <div class="form-group">
+                                        <label for="Title" class="label-control">Featured Image</label>
+                                        <input type="file" name="ArticleImage" id="ArticleImage" class="form-control" accept="image/*">
+                                    </div>
+                                </div>
+                                <div class="col-sm-6">
+                                    <div class="form-group">
+                                        <label for="Title" class="label-control">Category</label>
+                                        <select name="ArticleCategory" id="ArticleCategory" class="form-control" onchange="getSubcategories(this.value)">
+                                            <option label="--Select Category--"></option>
+                                            <% if (categories.length > 0){ %>
+                                                <% categories.map(item=>{ %>
+                                                    <option value="<%= item.categoryName %>"><%= item.categoryName %></option>
+                                               <%}) %>
+                                            <%}else{ %>
+                                                <option label="--No Category--" class="text-danger"></option>
+                                            <% } %>
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-sm-6">
+                                    <div class="form-group">
+                                        <label for="Title" class="label-control">Sub Category</label>
+                                        <select name="ArticleSubCategory" id="ArticlesSubCategory" class="form-control">
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="col-sm-6">
+                                    <div class="form-group">
+                                        <label for="Title" class="label-control">Publish Date</label>
+                                        <input type="date" name="PublishDate" id="ArticlePublish" class="form-control" min="<%= new Date().toISOString().split('T')[0] %>">
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-sm-12">
+                                    <label for="content" class="label-control">Content</label>
+                                    <textarea name="content" id="ArticleContent" class="form-control"></textarea>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-sm-4 offset-sm-4">
+                                    <button class="btn bg-warning btn-block  mt-3">
+                                        Post Article
+                                    </button>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 </div>
 <%- include('../../../Layouts/Backend/Footer.ejs') %>
+<script>
+    let editor;
+ $(function () {
+    ClassicEditor
+        .create( document.querySelector( '#ArticleContent' ) ,{
+            placeholder: 'Please type your content Here',
+        }).then(newEditor=>{
+            editor = newEditor;
+        })
+        .catch( err => {
+           
+        } );
+    });
+    const getSubcategories = async( data)=>{
+        const sfield = document.querySelector( 'select#ArticlesSubCategory');
+        sfield.innerHTML=""
+        const opt = document.createElement("option")
+        opt.setAttribute("label","--Loading Data---")
+        opt.textContent = ""
+        if(data){
+            sfield.appendChild(opt)
+            //then fetch the data from the backend 
+            const res = await fetch("/Get/Subategories",{
+                method:'post',
+                body:JSON.stringify({
+                    CategoryName:data
+                }),
+                headers:{
+                    'Content-Type':'application/json'
+                }
+            })
+            const resp = await res.json()
+            if(resp.subcategories.length > 0){
+                let subcategories = resp.subcategories
+                subcategories.forEach(item=>{
+                    const opt = document.createElement("option")
+                    opt.setAttribute("value",item.SubCategory)
+                    opt.setAttribute("class","bg-warning")
+                    opt.textContent = item.SubCategory
+                    sfield.appendChild(opt)
+                })
+            }else{
+                const opt = document.createElement("option")
+                opt.setAttribute("label","--No Data Available---")
+                opt.setAttribute("class","bg-danger")
+                opt.textContent = ""
+                sfield.appendChild(opt)
+            }
+            
+        }else{
+            sfield.innerHTML=""
+        }
+    }
+    const form = document.querySelector("form#articleForm")
+    const ArticleError = document.querySelector("div#errorClass")
+    form.addEventListener("submit",async (e)=>{
+        ArticleError.textContent=""
+        e.preventDefault();
+        const ArticleTitle = form.ArticleTitle.value
+        const ArticleImage = form.ArticleImage.files
+        const ArticleCategory = form.ArticleCategory.value
+        const ArticleSubCategory = form.ArticleSubCategory.value
+        const PublishDate = form.PublishDate.value
+        const Content = editor.getData();
+        if(!ArticleTitle){
+            ArticleError.textContent = "Please Type A title for your Article"
+            document.querySelector("input#ArticleTitle").classList.add("is-invalid")
+            document.querySelector("input#ArticleTitle").classList.add("errorClass")
+            ArticleError.classList.add("bg-warning")
+            return;
+        }else{
+            document.querySelector("input#ArticleTitle").classList.remove("is-invalid")
+            document.querySelector("input#ArticleTitle").classList.remove("errorClass")
+            document.querySelector("input#ArticleTitle").classList.add("is-valid")
+            document.querySelector("input#ArticleTitle").classList.add("successClass")
+        }
+        if(ArticleImage.length<1){
+            ArticleError.textContent = "Please Upload an Image"
+            document.querySelector("input#ArticleImage").classList.add("is-invalid")
+            document.querySelector("input#ArticleImage").classList.add("errorClass")
+            ArticleError.classList.add("bg-warning")
+            return;
+        }
+        else{
+            document.querySelector("input#ArticleImage").classList.remove("is-invalid")
+            document.querySelector("input#ArticleImage").classList.remove("errorClass")
+            document.querySelector("input#ArticleImage").classList.add("is-valid")
+            document.querySelector("input#ArticleImage").classList.add("successClass")
+        }
+        if(!ArticleCategory){
+            ArticleError.textContent = "Please Select a Category"
+            document.querySelector("select#ArticleCategory").classList.add("is-invalid")
+            document.querySelector("select#ArticleCategory").classList.add("errorSelect")
+            ArticleError.classList.add("bg-warning")
+            return;
+        }
+        else{
+            document.querySelector("select#ArticleCategory").classList.remove("is-invalid")
+            document.querySelector("select#ArticleCategory").classList.remove("errorClass")
+            document.querySelector("select#ArticleCategory").classList.add("is-valid")
+            document.querySelector("select#ArticleCategory").classList.add("successSelect")
+        }
+        if(!ArticleSubCategory){
+            ArticleError.textContent = "Please Select a Sub Category"
+            document.querySelector("select#ArticlesSubCategory").classList.add("is-invalid")
+            document.querySelector("select#ArticlesSubCategory").classList.add("errorSelect")
+            ArticleError.classList.add("bg-warning")
+            return;
+        }
+        else{
+            document.querySelector("select#ArticlesSubCategory").classList.remove("is-invalid")
+            document.querySelector("select#ArticlesSubCategory").classList.remove("errorSelect")
+            document.querySelector("select#ArticlesSubCategory").classList.add("is-valid")
+            document.querySelector("select#ArticlesSubCategory").classList.add("successSelect")
+        }
+        if(!PublishDate){
+            ArticleError.textContent = "Please Select a Publishing Date"
+            document.querySelector("input#ArticlePublish").classList.add("is-invalid")
+            document.querySelector("input#ArticlePublish").classList.add("errorClass")
+            ArticleError.classList.add("bg-warning")
+            return;
+        }
+        else{
+            document.querySelector("input#ArticlePublish").classList.remove("is-invalid")
+            document.querySelector("input#ArticlePublish").classList.remove("errorClass")
+            document.querySelector("input#ArticlePublish").classList.add("is-valid")
+            document.querySelector("input#ArticlePublish").classList.add("successClass")
+        }
+        if(!Content){
+            swal('Content Missing', 'Please Type the Content','warning')
+            return;
+        }
+        //post the data to the backend 
+        const formData = new FormData();
+        formData.append("ArticleTitle", ArticleTitle)
+        formData.append("ArticleCategory", ArticleCategory)
+        formData.append("ArticleSubCategory", ArticleSubCategory)
+        formData.append("PublishDate", PublishDate)
+        formData.append("Content", Content)
+        for(let i=0;i<ArticleImage.length;i++){
+            formData.append("FeaturedImage",ArticleImage[i])
+        }
+        const res = await fetch("/Post-articles",{
+            method: 'post',
+            body:formData,
+        })
+        const resp = await res.json()
+        swal(resp.status,`${resp.message}. Reloading...`,resp.status)
+        if(resp.status==='success'){
+            setTimeout(()=>{
+                location.href = location.href
+            },3000)
+        }
+    })
+</script>
