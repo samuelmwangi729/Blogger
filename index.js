@@ -14,6 +14,7 @@ const path = require('path')
 app.get("*", async (req, res,next) =>{
     res.locals.apptitle = process.env.APP_TITLE
     res.locals.categories =[]
+    res.locals.errorMessage=""
     next()
 })
 app.use(
@@ -32,7 +33,7 @@ app.use(homeRouter)
 app.use(blogRoutes)
 app.use((err, req, res, next) =>{
     const status = err?.status?err?.status : ' failed'
-    const message = err?.message
+    const message = err?.message?err?.message:res.locals.errorMessage
     const stack  = err?.stack
 
     res.status(500).json({

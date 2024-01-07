@@ -1,37 +1,5 @@
 <%- include('../../../Layouts/Backend/Header.ejs') %>
 <div>
-  <!-- Modal -->
-  <div class="modal fade" id="articleModal" tabindex="-1" aria-labelledby="articleModalLabel" aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered modal-lg">
-      <div class="modal-content">
-        <div class="modal-header">
-          <h1 class="modal-title fs-5 text-center" id="alertModalTitle"></h1>
-          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close">X</button>
-        </div>
-        <div class="modal-body">
-            <div class="text-center">
-                <img  alt="" id="featuredImage" style="width: 200px;">
-            </div>
-          <div class="row">
-            <div class="col-sm-4">
-                Category: <span id="articleCategory"></span>
-            </div>
-            <div class="col-sm-4">
-                Sub Category: <span id="articleSubCategory"></span> 
-             </div>
-             <div class="col-sm-4">
-                Created On: <span id="articleCreated"></span>
-             </div>
-          </div>
-          <div id="articleBody"></div>
-        </div>
-        <div class="modal-footer">
-          <button type="button" class="btn btn-secondary btn-sm" data-bs-dismiss="modal">Exit</button>
-        </div>
-      </div>
-    </div>
-  </div>
-    <!-- main body content goes here -->
     <div class="container">
         <div class="row">
             <% if(errorMessage){ %>
@@ -40,91 +8,11 @@
                 <%= errorMessage %>
             </div>
             <% } %>
-            <div class="col-sm-5">
-                <div class="card bg-white">
-                    <div class="card-header">
-                        <h2 class="text-center">
-                            Available Articles
-                        </h2>
-                    </div>
-                    <div class="card-body">
-                        <div class="table-responsive">
-                            <table class="table table-border">
-                                <thead>
-                                    <tr>
-                                        <th>S/No</th>
-                                        <th>Featured Image</th>
-                                        <th>Title</th>
-                                        <th>Status</th>
-                                        <th>Actions</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    <% if(articles.length > 0) { %>
-                                        <% let num =1; articles.map(article =>{%>
-                                            <tr>
-                                                <td onclick="viewArticle('<%=article?.Slug %>')">
-                                                    <%= num %>
-                                                </td>
-                                                <td onclick="viewArticle('<%=article?.Slug %>')">
-                                                    <img src="/Uploads/<%= article.FeaturedImage %>" alt="<%= article.Title %>" style="width:50px !important">
-                                                </td>
-                                                <td class="text-sm"><%= article.Title %></td>
-                                                <td onclick="viewArticle('<%=article?.Slug %>')">
-                                                    <% if(article.blogStatus==='Active') { %>
-                                                        <span class="badge badge-success bg-success">
-                                                            <%= article.blogStatus%>
-                                                        </span>
-                                                    <%}else { %>
-                                                        <span class="badge badge-warning bg-warning">
-                                                            <%= article.blogStatus%>
-                                                        </span>
-                                                    <%} %>
-                                                </td>
-                                                <td>
-                                                    <% if(article.blogStatus==='Published') { %>
-                                                    <span class="badge badge-warning bg-danger" onclick="WorkOnArticle('<%= article?.Slug %>','Delete')">
-                                                        Delete
-                                                    </span>
-                                                    <span class="badge badge-warning bg-primary" onclick="WorkOnArticle('<%= article?.Slug %>','Edit')">
-                                                        Edit
-                                                    </span>
-                                                    <%}else { %>
-                                                    <span class="badge badge-warning bg-warning" onclick="WorkOnArticle('<%= article?.Slug %>','Suspend')">
-                                                        Suspend 
-                                                        <!-- visible to the admin only -->
-                                                    </span>
-                                                    <span class="badge badge-warning bg-warning" onclick="WorkOnArticle('<%= article?.Slug %>','Activate')">
-                                                        Publish 
-                                                        <!-- visible to the admin only -->
-                                                    </span>
-                                                    <span class="badge badge-warning bg-primary" onclick="WorkOnArticle('<%= article?.Slug %>','Edit')">
-                                                        Edit
-                                                    </span>
-                                                    <%}%>
-                                                </td>
-                                            </tr>
-                                        <%  num = num+1 })%>
-                                    <%}else{ %>
-                                        <tr>
-                                            <td colspan="5">
-                                                <div class="alert bg-warning">
-                                                    <p>No Articles to Display</p>
-                                                </div>
-                                            </td>
-                                        </tr>
-                                    <% } %>
-                                </tbody>
-                            </table>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div class="col-sm-7">
+            <div class="col-sm-8 offset-sm-2">
                 <div class="card">
                     <div class="card-header">
                         <h3 class="text-center">
-                            Add Article
+                            Update Article: <%= article.Title %>
                         </h3>
                     </div>
                     <div class="card-body">
@@ -134,7 +22,7 @@
                             <div class="row">
                                 <div class="form-group">
                                     <label for="Title" class="label-control">Title</label>
-                                    <input type="text" name="ArticleTitle" id="ArticleTitle" class="form-control">
+                                    <input type="text" name="ArticleTitle" id="ArticleTitle" class="form-control" value="<%= article.Title %>">
                                 </div>
                             </div>
                             <div class="row">
@@ -151,7 +39,7 @@
                                             <option label="--Select Category--"></option>
                                             <% if (categories.length > 0){ %>
                                                 <% categories.map(item=>{ %>
-                                                    <option value="<%= item.categoryName %>"><%= item.categoryName %></option>
+                                                    <option value="<%= item.categoryName %>"<% if(article.blogCategory=== item.categoryName){%> selected <%} %>><%= item.categoryName %></option>
                                                <%}) %>
                                             <%}else{ %>
                                                 <option label="--No Category--" class="text-danger"></option>
@@ -165,26 +53,27 @@
                                     <div class="form-group">
                                         <label for="Title" class="label-control">Sub Category</label>
                                         <select name="ArticleSubCategory" id="ArticlesSubCategory" class="form-control">
+                                            <option value="<%= article.blogSubCategory %>"><%= article.blogSubCategory %></option>
                                         </select>
                                     </div>
                                 </div>
                                 <div class="col-sm-6">
                                     <div class="form-group">
-                                        <label for="Title" class="label-control">Publish Date</label>
-                                        <input type="date" name="PublishDate" id="ArticlePublish" class="form-control" min="<%= new Date().toISOString().split('T')[0] %>">
+                                        <label for="Title" class="label-control">Publish Date</label> 
+                                        <input type="date" name="PublishDate" id="ArticlePublish" class="form-control" min="<%= article.publishDate.toISOString().split("T")[0] %>">
                                     </div>
                                 </div>
                             </div>
                             <div class="row">
                                 <div class="col-sm-12">
                                     <label for="content" class="label-control">Content</label>
-                                    <textarea name="content" id="ArticleContent" class="form-control"></textarea>
+                                    <textarea name="content" id="ArticleContent" class="form-control" data-content="<%= article.BlogContent %>"><%= article.BlogContent %></textarea>
                                 </div>
                             </div>
                             <div class="row">
                                 <div class="col-sm-4 offset-sm-4">
                                     <button class="btn bg-warning btn-block  mt-3">
-                                        Post Article
+                                        Update Article
                                     </button>
                                 </div>
                             </div>
@@ -378,30 +267,6 @@
         else{
             //there is an error
             swal(resp.status,resp.message,resp.status)
-        }
-    }
-    WorkOnArticle = async (slug,action)=>{
-        //just post the data to the backend 
-        const res = await fetch("/WorkOnArticles",{
-            method:'POST',
-            body:JSON.stringify({
-                Slug:slug,
-                ACTION:action
-            }),
-            headers:{
-                'Content-Type':'application/json'
-            }
-        })
-        const resp = await res.json()
-        swal(resp.status,`${resp.message}. Redirecting ...`,resp.status)
-        if(resp.redirect==='self'){
-            setTimeout(()=>{
-                location.reload()
-            },3000)
-        }else{
-            setTimeout(()=>{
-                location.href = resp.redirect
-            },3000)
         }
     }
 </script>

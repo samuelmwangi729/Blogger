@@ -49,6 +49,7 @@ verifyTKN = async(tkn, req,res,next)=>{
     jwt.verify(tkn,process.env.TOKEN_SECRET_KEY,(err,decodedToken)=>{
         if(err){
             res.cookie("jwt","",{maxAge:10})
+            res.locals.errorMessage=""
             res.redirect("/")
         }else{
             next()
@@ -72,6 +73,7 @@ VerifyAndGetUser = async(tkn, req,res,next)=>{
             //check if the user is verified
             //if not, redirect here 
             res.locals.user = user
+            res.locals.errorMessage=""
             if(user.AccountStatus==='Verified'){
                 next()
             }else{

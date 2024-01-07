@@ -154,7 +154,11 @@ GetSingleArticle = asyncHandler(async (req,res)=>{
             })
         }
         else if(ACTION==='Edit'){
-
+            res.status(200).json({
+                status:'success',
+                message:'Operation Permitted',
+                redirect:`/Edit-Article/${article?.Slug}`
+            })
         }else{
             //trigger the error here
             res.status(500).json({
@@ -170,4 +174,28 @@ GetSingleArticle = asyncHandler(async (req,res)=>{
         })
     }
  })
-module.exports ={Index,WorkOnArticles,GetSingleArticle,GetPostData,GetSubcategories}
+
+ EditArticle = asyncHandler(async(req,res)=>{
+    const {Slug} = req.params
+    //get the article based on the logged In user
+    const userEmail = res.locals.user.emailAddress
+    const article=await Blog.findOne({blogAuthor:userEmail,$or:[{blogStatus: "Published"},{blogStatus:"Pending"}]})
+    if(article.blogStatus==='Pending'){
+        //you can edit
+        const categories = await Category.find({categoryStatus:'Active'}).select("categoryName")
+        console.log(article)
+        res.render('Backend/Blog/EditArticle',{article,categories})
+    }
+    else if(article.blogStatus==='Published' && res.locals.user.UserRole==='Admin'){
+        //also edit
+        res.json({article})
+    }
+    else{
+        res.locals.errorMessage = "Unknown Operation"
+        console.error(res.locals.errorMessage)
+        res.status(500).redirect("/Articles/User")
+    }
+    //edit if its pending 
+    //edit if you are the admin 
+ })
+module.exports ={Index,EditArticle,WorkOnArticles,GetSingleArticle,GetPostData,GetSubcategories}
