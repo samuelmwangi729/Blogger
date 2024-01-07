@@ -1,5 +1,36 @@
 <%- include('../../../Layouts/Backend/Header.ejs') %>
 <div>
+  <!-- Modal -->
+  <div class="modal fade" id="articleModal" tabindex="-1" aria-labelledby="articleModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-lg">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h1 class="modal-title fs-5 text-center" id="alertModalTitle"></h1>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close">X</button>
+        </div>
+        <div class="modal-body">
+            <div class="text-center">
+                <img  alt="" id="featuredImage" style="width: 200px;">
+            </div>
+          <div class="row">
+            <div class="col-sm-4">
+                Category: <span id="articleCategory"></span>
+            </div>
+            <div class="col-sm-4">
+                Sub Category: <span id="articleSubCategory"></span> 
+             </div>
+             <div class="col-sm-4">
+                Created On: <span id="articleCreated"></span>
+             </div>
+          </div>
+          <div id="articleBody"></div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary btn-sm" data-bs-dismiss="modal">Exit</button>
+        </div>
+      </div>
+    </div>
+  </div>
     <!-- main body content goes here -->
     <div class="container">
         <div class="row">
@@ -12,7 +43,7 @@
                     </div>
                     <div class="card-body">
                         <div class="table-responsive">
-                            <table class="table table-border table-condensed table-hover">
+                            <table class="table table-border">
                                 <thead>
                                     <tr>
                                         <th>S/No</th>
@@ -26,14 +57,14 @@
                                     <% if(articles.length > 0) { %>
                                         <% let num =1; articles.map(article =>{%>
                                             <tr>
-                                                <td>
+                                                <td onclick="viewArticle('<%=article?.Slug %>')">
                                                     <%= num %>
                                                 </td>
-                                                <td>
+                                                <td onclick="viewArticle('<%=article?.Slug %>')">
                                                     <img src="/Uploads/<%= article.FeaturedImage %>" alt="<%= article.Title %>" style="width:50px !important">
                                                 </td>
                                                 <td class="text-sm"><%= article.Title %></td>
-                                                <td>
+                                                <td onclick="viewArticle('<%=article?.Slug %>')">
                                                     <% if(article.blogStatus==='Active') { %>
                                                         <span class="badge badge-success bg-success">
                                                             <%= article.blogStatus%>
@@ -45,13 +76,18 @@
                                                     <%} %>
                                                 </td>
                                                 <td>
-                                                    <span class="badge badge-warning bg-danger">
+                                                    <span class="badge badge-warning bg-danger" onclick="WorkOnArticle('<%= article?.Slug %>','Delete')">
                                                         Delete
                                                     </span>
-                                                    <span class="badge badge-warning bg-warning">
-                                                        Suspend
+                                                    <span class="badge badge-warning bg-warning" onclick="WorkOnArticle('<%= article?.Slug %>','Suspend')">
+                                                        Suspend 
+                                                        <!-- visible to the admin only -->
                                                     </span>
-                                                    <span class="badge badge-warning bg-primary">
+                                                    <span class="badge badge-warning bg-warning" onclick="WorkOnArticle('<%= article?.Slug %>','Activate')">
+                                                        Publish 
+                                                        <!-- visible to the admin only -->
+                                                    </span>
+                                                    <span class="badge badge-warning bg-primary" onclick="WorkOnArticle('<%= article?.Slug %>','Edit')">
                                                         Edit
                                                     </span>
                                                 </td>
@@ -59,7 +95,7 @@
                                         <%  num = num+1 })%>
                                     <%}else{ %>
                                         <tr>
-                                            <td colspan="4">
+                                            <td colspan="5">
                                                 <div class="alert bg-warning">
                                                     <p>No Articles to Display</p>
                                                 </div>
@@ -302,4 +338,58 @@
             },3000)
         }
     })
+</script>
+<script>
+    const viewArticle = async (slug)=>{
+        const myModal = new bootstrap.Modal(document.getElementById('articleModal'))
+        //get the article from the backend 
+        const res = await fetch("/Get-Single-Article", {
+            method:'post',
+            body:JSON.stringify({
+                slug
+            }),
+            headers:{
+                'Content-Type': 'application/json'
+            }
+        })
+        const resp = await res.json()
+        if(resp.status==='success'){
+            const article = resp.data
+            document.getElementById("alertModalTitle").textContent=article.Title
+            document.querySelector('img#featuredImage').setAttribute("src",`/Uploads/${article.FeaturedImage}`)
+            document.getElementById("articleCategory").textContent=article.blogCategory
+            document.getElementById("articleSubCategory").textContent=article.blogSubCategory
+            document.getElementById("articleCreated").textContent= `${article.createdAt.toString().split("T")[0]}`
+            document.getElementById("articleBody").innerHTML=article.BlogContent
+            myModal.show()
+        }
+        else{
+            //there is an error
+            swal(resp.status,resp.message,resp.status)
+        }
+    }
+    WorkOnArticle = async (slug,action)=>{
+        //just post the data to the backend 
+        const res = await fetch("/WorkOnArticles",{
+            method:'POST',
+            body:JSON.stringify({
+                Slug:slug,
+                ACTION:action
+            }),
+            headers:{
+                'Content-Type':'application/json'
+            }
+        })
+        const resp = await res.json()
+        swal(resp.status,`${resp.message}. Redirecting ...`,resp.status)
+        if(resp.redirect==='self'){
+            setTimeout(()=>{
+                location.reload()
+            },3000)
+        }else{
+            setTimeout(()=>{
+                location.href = resp.redirect
+            },3000)
+        }
+    }
 </script>

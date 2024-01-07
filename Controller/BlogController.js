@@ -1,9 +1,10 @@
 const {Category,SubCategory } = require('../Models/Category');
 const Blog  = require('../Models/Blog');
 const UploadImage = require('../Utils/UploadImage');
+const asyncHandler = require('express-async-handler')
 Index = async (req,res)=>{
     const categories = await Category.find({categoryStatus:'Active'}).select("categoryName")
-    articles=await Blog.find({blogAuthor:res.locals.user.emailAddress})
+    articles=await Blog.find({blogAuthor:res.locals.user.emailAddress,$or:[{blogStatus: "Published"},{blogStatus:"Pending"}]})
     res.render("Backend/Blog/Index",{articles,categories})
 }
 GetSubcategories = async (req, res)=>{
@@ -54,6 +55,7 @@ GetPostData = async (req, res)=>{
                                 FeaturedImage:UploadImage(FeaturedImage),
                                 BlogContent:Content,
                                 blogCategory:ArticleCategory,
+                                blogSubCategory:subcategory.SubCategory,
                                 blogAuthor:author,
                                 publishDate:PublishDate
                             })
@@ -90,4 +92,82 @@ GetPostData = async (req, res)=>{
         })
     }
 }
-module.exports ={Index,GetPostData,GetSubcategories}
+
+GetSingleArticle = asyncHandler(async (req,res)=>{
+    const {slug} = req.body
+    const userEmail = res.locals.user.emailAddress
+    //check if the article exists 
+    const article = await Blog.findOne({Slug:slug,blogAuthor:userEmail},{
+        publishDate:0,
+        updatedAt:0,
+        __v:0,
+        _id:0,
+        blogAuthor:0,
+        Slug:0
+    })
+    res.status(200).json({
+        status:'success',
+        message:'Article Successfully Fetched',
+        data:article,
+        stack:''
+    })
+})
+ const WorkOnArticles = asyncHandler(async (req,res)=>{
+    const {Slug,ACTION} = req.body
+
+    //always check if the actions are done by the owner 
+    const userEmail = res.locals.user.emailAddress
+    console.log(ACTION)
+    //filter the actions 
+    const article = await Blog.findOne({Slug:Slug,blogAuthor:userEmail})
+    if(article){
+        if(ACTION==='Delete'){
+            //delete the article
+            article.blogStatus = 'Deleted'
+            await article.save()
+            //trigger the error here
+            res.status(200).json({
+                status:'success',
+                message:'Article successfully Deleted',
+                redirect:'self'
+            })
+
+        }
+        else if(ACTION==='Suspend'){
+            article.blogStatus = 'Suspended'
+            await article.save()
+            //trigger the error here
+            res.status(200).json({
+                status:'success',
+                message:'Article successfully Suspended',
+                redirect:'self'
+            })
+        }
+        else if(ACTION==='Activate'){
+            article.blogStatus = 'Published'
+            await article.save()
+            //trigger the error here
+            res.status(200).json({
+                status:'success',
+                message:'Article successfully Published',
+                redirect:'self'
+            })
+        }
+        else if(ACTION==='Edit'){
+
+        }else{
+            //trigger the error here
+            res.status(500).json({
+                status:'error',
+                message:'Unknown Operation Attempted',
+                redirect:'self'
+            })
+        }
+    }else{
+        res.status(500).json({
+            status:'error',
+            message:'Unknown Operation Attempted'
+        })
+    }
+ })
+module.exports ={Index,WorkOnArticles,GetSingleArticle,GetPostData,GetSubcategories}

@@ -21,6 +21,11 @@ const BlogSchema = new Schema({
         type:String,
         required:[true,'Category is required'],
     },
+    blogSubCategory:{
+        type:String,
+        required:[true,'The Sub Category is required'],
+        default:"Null"
+    },
     blogStatus:{
         type:String,
         enum:['Published','Pending','Suspended','Removed','Deleted'],

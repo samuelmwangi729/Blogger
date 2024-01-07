@@ -9,7 +9,6 @@ const {loadCategories} = require("./Controller/HomeController")
 const helmet = require('helmet')
 require('dotenv').config()
 const app = express()
-app.use(helmet())
 const path = require('path')
 //let the server run on port 8080
 app.get("*", async (req, res,next) =>{
@@ -17,6 +16,11 @@ app.get("*", async (req, res,next) =>{
     res.locals.categories =[]
     next()
 })
+app.use(
+    helmet({
+      contentSecurityPolicy: false,
+    })
+  );
 app.use(express.urlencoded({extended: true}))
 app.use(express.json())
 app.use(cookieParser())
@@ -26,6 +30,18 @@ app.set('view engine','ejs')
 app.set('views','Views')
 app.use(homeRouter)
 app.use(blogRoutes)
+app.use((err, req, res, next) =>{
+    const status = err?.status?err?.status : ' failed'
+    const message = err?.message
+    const stack  = err?.stack
+
+    res.status(500).json({
+        status,
+        message,
+        stack,
+        data:''
+    })
+})
 app.use(AuthenticatedRoutes)
 const server  = app.listen(
     process.env.PORT || 80,
