@@ -1,0 +1,153 @@
+<%- include('../../Layouts/Frontend/Header.ejs') %>
+<div>
+    <!-- main body content goes here -->
+    <!--Breadcrumb Start-->
+    <div class="pq-breadcrumb pq-bg-dark pq-bg-img-2">
+        <div class="container">
+            <div class="row align-items-center">
+                <div class="col-lg-12">
+                    <nav aria-label="breadcrumb">
+                        <div class="pq-breadcrumb-title">
+                            <h1><%= article.Title %></h1>
+                        </div>
+                    </nav>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!--Breadcrumb End-->
+
+    <!--Blog-Single Start-->
+    <section class="blog-single">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-8">
+                    <div class="pq-blog-post">
+                        <div class="pq-post-media">
+                            <img src="/Uploads/<%= article.FeaturedImage %>" alt="blog-img">
+                        </div>
+                        <div class="pq-blog-contain">
+                            <div class="pq-post-meta">
+                                <ul>
+                                    <li class="pq-post-author">Posted  <%= moment(article.createdAt, "YYYYMMDD").fromNow(); %></li>
+                                    </li>
+                                    <li class="pq-post-tag">
+                                        <a href="/Category/<%=article.blogCategory %>"><i class="fa fa-tag"></i><%= article.blogCategory %></a>
+                                    </li>
+                                </ul>
+                            </div>
+                            <p>
+                                <%- article.BlogContent%>
+                            </p>
+                        </div>
+                    </div>
+                    <div id="comments" class="pq-comment-area">
+                        <h3 class="comments-title">5 Comment</h3>
+                        <ol class="commentlist">
+                            <li class="comment even thread-even depth-1" id="li-comment-2">
+                                <div class="pq-comment-info">
+                                    <div class="pq-comment-wrap">
+                                        <div class="pq-comment-avatar">
+                                            <img alt="" src="images/blog/blog-single/1.png" loading="lazy">
+                                        </div>
+                                        <div class="pq-comment-box">
+                                            <h5 class="title">Thomas Luis</h5>
+                                            <div class="pq-comment-metadata">
+                                            </div><!-- .comment-metadata -->
+                                            <div class="comment-content">
+                                                <p>Maecenas vitae urna sit amet purus accumsan tempus vel sed Proin
+                                                    consequat orci
+                                                    consequat, ultrices nisl ac, tempor magna Etiam ac arcu a orci
+                                                    aliquam pulvinar.</p>
+                                            </div><!-- .comment-content -->
+                                        </div><!-- .comment-author -->
+                                    </div>
+                                </div>
+                            </li><!-- #comment-## -->
+                        </ol><!-- .commentlist -->
+
+                        <div class="comment-respond">
+                            <h3 id="reply-title" class="comment-reply-title mt-4">Write a Reply or Comment </h3>
+                            <form method="post" class="comment-form pq-applyform" novalidate="">
+                                <p class="comment-notes"><span>Your email address will not be published.</span> <span
+                                        class="required-field-message" aria-hidden="true">Required fields are marked
+                                        <span class="required" aria-hidden="true">*</span></span></p>
+                                <div class="row">
+                                    <div class="col-lg-4">
+                                        <input id="first-name" class="name-field" name="author" type="text"
+                                            placeholder=" Enter Name" required="">
+                                    </div>
+                                    <div class="col-lg-4">
+                                        <input id="e-mail" class="e-mail-field" name="email" type="text"
+                                            placeholder=" Enter Email" required="">
+                                    </div>
+                                    <div class="col-lg-4">
+                                        <input id="url" class="url-field" name="url" type="text" placeholder="Enter Url">
+                                    </div>
+                                    <div class="col-lg-12">
+                                        <textarea id="message" name="comment" cols="60" rows="6"
+                                            placeholder=" Enter Your Comment"></textarea>
+                                    </div>
+                                    <div class="row mb-2">
+                                        <div class="col-sm-6 offset-sm-3">
+                                            <div class="g-recaptcha" data-sitekey="6Le7IDQpAAAAADi_Igd9ohqPzxjVvOvdUdLIF-XI"></div>
+                                        </div>
+                                   </div>
+                                </div>
+                                <a class="pq-button mb-0 form-btn">Post comment</a>
+                            </form>
+                        </div>
+                        <!-- #respond -->
+                    </div>
+                </div>
+                <div class="col-lg-4 mt-4 mt-lg-0">
+                    <div id="secondary" class="sidebar widget-area">
+                        <div id="search-2" class="widget widget_search">
+                            <form role="search" method="get" class="search-form" action="main-home.html">
+                                <label>
+                                    <span class="screen-reader-text">Search for:</span>
+                                    <input type="search" class="search-field mb-0" placeholder="Search …" value=""
+                                        name="s">
+                                </label>
+                                <button type="submit" class="search-submit"><span
+                                        class="screen-reader-text">Search</span></button>
+                            </form>
+                        </div>
+                        <div class="pq-widget-menu widget">
+                            <h2 class="widget-title">Recent Post</h2>
+                            <% if(posts.length>0){ %>
+                                <% posts.map(post=>{ %>
+                                    <div class="pq-footer-recent-post">
+                                        <div class="pq-footer-recent-post-media">
+                                            <a href="/blog/<%= post.Slug%>">
+                                                <img src="/Uploads/<%= post.FeaturedImage %>" alt="<%=post.Title%>" style="width:80px;height:60px">
+                                            </a>
+                                        </div>
+                                        <div class="pq-footer-recent-post-info">
+                                            <h6><a href="/blog/<%= post.Slug%>"><%=post.Title.substring(0,30)%>...</a></h6>
+                                            <a href="/blog/<%= post.Slug%>" class="pq-post-date"><%= moment(article.createdAt, "YYYYMMDD").fromNow(); %></a>
+                                        </div>
+                                    </div>
+                                <%}) %>
+                            <%} %>
+                        </div>
+                        <div id="categories-2" class="widget widget_categories">
+                            <h2 class="widget-title">Categories</h2>
+                            <ul>
+                                <% if(categories.length>0){%>
+                                    <% categories.map(category=>{%>
+                                        <li>
+                                            <a href="/Category/<%=category.categoryName %>"><%= category.categoryName %></a>
+                                        </li>
+                                    <%})%>
+                                <%}%>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    <!--Blog-Single End-->
+</div>
+<%- include('../../Layouts/Frontend/Footer.ejs') %>

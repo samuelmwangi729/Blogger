@@ -86,20 +86,15 @@
                                                     <span class="badge badge-warning bg-danger" onclick="WorkOnArticle('<%= article?.Slug %>','Delete')">
                                                         Delete
                                                     </span>
+                                                    <%}else { %>
                                                     <span class="badge badge-warning bg-primary" onclick="WorkOnArticle('<%= article?.Slug %>','Edit')">
                                                         Edit
                                                     </span>
-                                                    <%}else { %>
                                                     <span class="badge badge-warning bg-warning" onclick="WorkOnArticle('<%= article?.Slug %>','Suspend')">
                                                         Suspend 
-                                                        <!-- visible to the admin only -->
                                                     </span>
                                                     <span class="badge badge-warning bg-warning" onclick="WorkOnArticle('<%= article?.Slug %>','Activate')">
                                                         Publish 
-                                                        <!-- visible to the admin only -->
-                                                    </span>
-                                                    <span class="badge badge-warning bg-primary" onclick="WorkOnArticle('<%= article?.Slug %>','Edit')">
-                                                        Edit
                                                     </span>
                                                     <%}%>
                                                 </td>

@@ -232,4 +232,4 @@ getNewPasswords = async(req, res)=>{
     
 }
 
-module.exports = { Home, About, Contact, Login, Logout, Reset, Register, Register_user,GetToken,get_reset_password,Login_User,getNewPasswords, Passwords,loadCategories }
+module.exports = { Home,loadCategories, About, Contact, Login, Logout, Reset, Register, Register_user,GetToken,get_reset_password,Login_User,getNewPasswords, Passwords,loadCategories }

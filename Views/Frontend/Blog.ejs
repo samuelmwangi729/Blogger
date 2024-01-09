@@ -1,0 +1,71 @@
+<%- include('../../Layouts/Frontend/Header.ejs') %>
+<div>
+    <!-- main body content goes here -->
+    <!--Breadcrumb Start-->
+    <div class="pq-breadcrumb pq-bg-dark pq-bg-img-2">
+        <div class="container">
+            <div class="row align-items-center">
+                <div class="col-lg-12">
+                    <nav aria-label="breadcrumb">
+                        <div class="pq-breadcrumb-title">
+                            <h1><%= category.categoryName %></h1>
+                        </div>
+                        <div class="pq-breadcrumb-container">
+                            <ol class="breadcrumb align-items-center">
+                                <li class="breadcrumb-item"><a href="/"><i class="fa fa-home me-2"></i>Home</a>
+                                </li>
+                                <li class="breadcrumb-item active"><%= category.categoryName %></li>
+                            </ol>
+                        </div>
+                    </nav>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!--Breadcrumb End-->
+
+    <!--Left Sidebar Start-->
+    <section class="left-sidebar">
+        <div class="container">
+            <div class="row">
+                <div class="col-xl-12">
+                    <div class="pq-blog pq-blog-col-1">
+                        <div class="row">
+                            <% if(articles.length>0){ %>
+                                <% articles.forEach(article=>{ %>
+                                    <div class="col-sm-3">
+                                        <div class="pq-blog-post">
+                                            <div class="pq-post-media">
+                                                <img loading="lazy" src="<%= `/Uploads/${article.FeaturedImage}` %>" alt="<%= article.Title %>" style="width:100%;height:200px">
+                                            </div>
+                                            <div class="pq-blog-contain">
+                                                <div class="pq-post-meta">
+                                                    <ul>
+                                                        <li class="pq-post-date"><%= moment(article.createdAt, "YYYYMMDD").fromNow(); %></li>
+                                                        <li class="pq-post-tag">
+                                                            <a href="/blog/<%= article.Slug %>"><i class="fa fa-tag"></i><%= article.blogCategory %></a>
+                                                        </li>
+                                                    </ul>
+                                                </div>
+                                                <h5 class="pq-blog-title"><a href="/blog/<%= article.Slug %>"><%= article.Title.substring(0,40) %></a></h5>
+                                                <p><%- article.BlogContent.substring(0,30) %></p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                <%}) %>
+                           <% }else{ %>
+                            <div class="col-sm-12">
+                                <div class="alert alert-primary">
+                                    <strong>Sorry!</strong> No Articles Present. Please Check Later with Us
+                                </div>
+                            </div>
+                           <% } %>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    <!--Left Sidebar End-->
+</div>
+<%- include('../../Layouts/Frontend/Footer.ejs') %>

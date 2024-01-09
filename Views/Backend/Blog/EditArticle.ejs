@@ -149,74 +149,6 @@
         const ArticleSubCategory = form.ArticleSubCategory.value
         const PublishDate = form.PublishDate.value
         const Content = editor.getData();
-        if(!ArticleTitle){
-            ArticleError.textContent = "Please Type A title for your Article"
-            document.querySelector("input#ArticleTitle").classList.add("is-invalid")
-            document.querySelector("input#ArticleTitle").classList.add("errorClass")
-            ArticleError.classList.add("bg-warning")
-            return;
-        }else{
-            document.querySelector("input#ArticleTitle").classList.remove("is-invalid")
-            document.querySelector("input#ArticleTitle").classList.remove("errorClass")
-            document.querySelector("input#ArticleTitle").classList.add("is-valid")
-            document.querySelector("input#ArticleTitle").classList.add("successClass")
-        }
-        if(ArticleImage.length<1){
-            ArticleError.textContent = "Please Upload an Image"
-            document.querySelector("input#ArticleImage").classList.add("is-invalid")
-            document.querySelector("input#ArticleImage").classList.add("errorClass")
-            ArticleError.classList.add("bg-warning")
-            return;
-        }
-        else{
-            document.querySelector("input#ArticleImage").classList.remove("is-invalid")
-            document.querySelector("input#ArticleImage").classList.remove("errorClass")
-            document.querySelector("input#ArticleImage").classList.add("is-valid")
-            document.querySelector("input#ArticleImage").classList.add("successClass")
-        }
-        if(!ArticleCategory){
-            ArticleError.textContent = "Please Select a Category"
-            document.querySelector("select#ArticleCategory").classList.add("is-invalid")
-            document.querySelector("select#ArticleCategory").classList.add("errorSelect")
-            ArticleError.classList.add("bg-warning")
-            return;
-        }
-        else{
-            document.querySelector("select#ArticleCategory").classList.remove("is-invalid")
-            document.querySelector("select#ArticleCategory").classList.remove("errorClass")
-            document.querySelector("select#ArticleCategory").classList.add("is-valid")
-            document.querySelector("select#ArticleCategory").classList.add("successSelect")
-        }
-        if(!ArticleSubCategory){
-            ArticleError.textContent = "Please Select a Sub Category"
-            document.querySelector("select#ArticlesSubCategory").classList.add("is-invalid")
-            document.querySelector("select#ArticlesSubCategory").classList.add("errorSelect")
-            ArticleError.classList.add("bg-warning")
-            return;
-        }
-        else{
-            document.querySelector("select#ArticlesSubCategory").classList.remove("is-invalid")
-            document.querySelector("select#ArticlesSubCategory").classList.remove("errorSelect")
-            document.querySelector("select#ArticlesSubCategory").classList.add("is-valid")
-            document.querySelector("select#ArticlesSubCategory").classList.add("successSelect")
-        }
-        if(!PublishDate){
-            ArticleError.textContent = "Please Select a Publishing Date"
-            document.querySelector("input#ArticlePublish").classList.add("is-invalid")
-            document.querySelector("input#ArticlePublish").classList.add("errorClass")
-            ArticleError.classList.add("bg-warning")
-            return;
-        }
-        else{
-            document.querySelector("input#ArticlePublish").classList.remove("is-invalid")
-            document.querySelector("input#ArticlePublish").classList.remove("errorClass")
-            document.querySelector("input#ArticlePublish").classList.add("is-valid")
-            document.querySelector("input#ArticlePublish").classList.add("successClass")
-        }
-        if(!Content){
-            swal('Content Missing', 'Please Type the Content','warning')
-            return;
-        }
         //post the data to the backend 
         const formData = new FormData();
         formData.append("ArticleTitle", ArticleTitle)
@@ -224,10 +156,13 @@
         formData.append("ArticleSubCategory", ArticleSubCategory)
         formData.append("PublishDate", PublishDate)
         formData.append("Content", Content)
-        for(let i=0;i<ArticleImage.length;i++){
-            formData.append("FeaturedImage",ArticleImage[i])
+        if(ArticleImage.length>0){
+            for(let i=0;i<ArticleImage.length;i++){
+                formData.append("FeaturedImage",ArticleImage[i])
+            }
         }
-        const res = await fetch("/Post-articles",{
+        console.log(...formData)
+        const res = await fetch("/Update-Post-articles",{
             method: 'post',
             body:formData,
         })
@@ -235,38 +170,8 @@
         swal(resp.status,`${resp.message}. Reloading...`,resp.status)
         if(resp.status==='success'){
             setTimeout(()=>{
-                location.href = location.href
+                location.href = "/Articles/User"
             },3000)
         }
     })
-</script>
-<script>
-    const viewArticle = async (slug)=>{
-        const myModal = new bootstrap.Modal(document.getElementById('articleModal'))
-        //get the article from the backend 
-        const res = await fetch("/Get-Single-Article", {
-            method:'post',
-            body:JSON.stringify({
-                slug
-            }),
-            headers:{
-                'Content-Type': 'application/json'
-            }
-        })
-        const resp = await res.json()
-        if(resp.status==='success'){
-            const article = resp.data
-            document.getElementById("alertModalTitle").textContent=article.Title
-            document.querySelector('img#featuredImage').setAttribute("src",`/Uploads/${article.FeaturedImage}`)
-            document.getElementById("articleCategory").textContent=article.blogCategory
-            document.getElementById("articleSubCategory").textContent=article.blogSubCategory
-            document.getElementById("articleCreated").textContent= `${article.createdAt.toString().split("T")[0]}`
-            document.getElementById("articleBody").innerHTML=article.BlogContent
-            myModal.show()
-        }
-        else{
-            //there is an error
-            swal(resp.status,resp.message,resp.status)
-        }
-    }
 </script>

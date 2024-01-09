@@ -7,6 +7,7 @@ const blogRoutes = require('./Routes/BlogRoutes')
 const isGuest = require('./Middlewares/Guest')
 const {loadCategories} = require("./Controller/HomeController")
 const helmet = require('helmet')
+const moment = require('moment')
 require('dotenv').config()
 const app = express()
 const path = require('path')
@@ -15,6 +16,7 @@ app.get("*", async (req, res,next) =>{
     res.locals.apptitle = process.env.APP_TITLE
     res.locals.categories =[]
     res.locals.errorMessage=""
+    res.locals.moment = moment
     next()
 })
 app.use(
