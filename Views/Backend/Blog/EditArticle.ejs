@@ -91,6 +91,10 @@
     ClassicEditor
         .create( document.querySelector( '#ArticleContent' ) ,{
             placeholder: 'Please type your content Here',
+            ckfinder:
+            {
+            uploadUrl: 'Ckeditor/'
+            }
         }).then(newEditor=>{
             editor = newEditor;
         })

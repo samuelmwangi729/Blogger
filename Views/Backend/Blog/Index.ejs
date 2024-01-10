@@ -1,106 +1,158 @@
-<%- include('../../../Layouts/Backend/Header.ejs') %>
-<div>
-  <!-- Modal -->
-  <div class="modal fade" id="articleModal" tabindex="-1" aria-labelledby="articleModalLabel" aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered modal-lg">
-      <div class="modal-content">
-        <div class="modal-header">
-          <h1 class="modal-title fs-5 text-center" id="alertModalTitle"></h1>
-          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close">X</button>
-        </div>
-        <div class="modal-body">
-            <div class="text-center">
-                <img  alt="" id="featuredImage" style="width: 200px;">
-            </div>
-          <div class="row">
-            <div class="col-sm-4">
-                Category: <span id="articleCategory"></span>
-            </div>
-            <div class="col-sm-4">
-                Sub Category: <span id="articleSubCategory"></span> 
-             </div>
-             <div class="col-sm-4">
-                Created On: <span id="articleCreated"></span>
-             </div>
-          </div>
-          <div id="articleBody"></div>
-        </div>
-        <div class="modal-footer">
-          <button type="button" class="btn btn-secondary btn-sm" data-bs-dismiss="modal">Exit</button>
-        </div>
-      </div>
-    </div>
-  </div>
-    <!-- main body content goes here -->
-    <div class="container">
-        <div class="row">
-            <% if(errorMessage){ %>
-            <div class="alert alert-danger bg-danger">
-                <strong>Error</strong>
-                <%= errorMessage %>
-            </div>
-            <% } %>
-            <div class="col-sm-5">
-                <div class="card bg-white">
-                    <div class="card-header">
-                        <h2 class="text-center">
-                            Available Articles
-                        </h2>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Summernote with Bootstrap 4</title>
+    <script src="https://code.jquery.com/jquery-3.5.1.min.js" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js"
+        integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous">
+    </script>
+
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css"
+        integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"
+        integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6" crossorigin="anonymous">
+    </script>
+
+    <link href="https://cdn.jsdelivr.net/npm/summernote@0.8.18/dist/summernote-bs4.min.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/summernote@0.8.18/dist/summernote-bs4.min.js"></script>
+    <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
+    <style>
+        ul li.nav-item a {
+            color: black !important;
+        }
+    </style>
+</head>
+
+<body>
+    <header class="navbar navbar-expand navbar-dark flex-column flex-md-row bd-navbar">
+        <a class="navbar-brand" href="/">
+            <img class="img-fluid logo" src="/images/logos/logo-1.png" width="200px" alt="techtrix">
+        </a>
+        <ul class="navbar-nav flex-row ml-md-auto d-none d-md-flex">
+            <li class="nav-item mt-2 pr-1">
+                <a href="/Dashboard">Dashboard</a>
+            </li>
+            <li class="nav-item dropdown">
+                <a class="nav-item nav-link dropdown-toggle mr-md-2" href="#" id="bd-versions"
+                    data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    <%= user.FirstName %>
+                    <%= user.LastName %>
+                </a>
+                <div class="dropdown-menu dropdown-menu-right" aria-labelledby="bd-versions">
+                    <a class="dropdown-item" href="/User/Profile">Profile</a>
+                    <a class="dropdown-item " href="/Logout">Logout</a>
+                </div>
+            </li>
+        </ul>
+    </header>
+    <div class="row mt-2">
+        <!-- Modal -->
+        <div class="modal fade" id="articleModal" tabindex="-1" aria-labelledby="articleModalLabel" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered modal-lg">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h1 class="modal-title fs-5 text-center" id="alertModalTitle"></h1>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close">X</button>
                     </div>
-                    <div class="card-body">
-                        <div class="table-responsive">
-                            <table class="table table-border">
-                                <thead>
-                                    <tr>
-                                        <th>S/No</th>
-                                        <th>Featured Image</th>
-                                        <th>Title</th>
-                                        <th>Status</th>
-                                        <th>Actions</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    <% if(articles.length > 0) { %>
+                    <div class="modal-body">
+                        <div class="text-center">
+                            <img alt="" id="featuredImage" style="width: 200px;">
+                        </div>
+                        <div class="row">
+                            <div class="col-sm-4">
+                                Category: <span id="articleCategory"></span>
+                            </div>
+                            <div class="col-sm-4">
+                                Sub Category: <span id="articleSubCategory"></span>
+                            </div>
+                            <div class="col-sm-4">
+                                Created On: <span id="articleCreated"></span>
+                            </div>
+                        </div>
+                        <div id="articleBody"></div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary btn-sm" data-bs-dismiss="modal">Exit</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- main body content goes here -->
+        <div class="container-fluid">
+            <div class="row">
+                <% if(errorMessage){ %>
+                <div class="alert alert-danger bg-danger">
+                    <strong>Error</strong>
+                    <%= errorMessage %>
+                </div>
+                <% } %>
+                <div class="col-sm-5">
+                    <div class="card bg-white">
+                        <div class="card-header">
+                            <h2 class="text-center">
+                                Available Articles
+                            </h2>
+                        </div>
+                        <div class="card-body">
+                            <div class="table-responsive">
+                                <table class="table table-border">
+                                    <thead>
+                                        <tr>
+                                            <th>S/No</th>
+                                            <th>Featured Image</th>
+                                            <th>Title</th>
+                                            <th>Status</th>
+                                            <th>Actions</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <% if(articles.length > 0) { %>
                                         <% let num =1; articles.map(article =>{%>
-                                            <tr>
-                                                <td onclick="viewArticle('<%=article?.Slug %>')">
-                                                    <%= num %>
-                                                </td>
-                                                <td onclick="viewArticle('<%=article?.Slug %>')">
-                                                    <img src="/Uploads/<%= article.FeaturedImage %>" alt="<%= article.Title %>" style="width:50px !important">
-                                                </td>
-                                                <td class="text-sm"><%= article.Title %></td>
-                                                <td onclick="viewArticle('<%=article?.Slug %>')">
-                                                    <% if(article.blogStatus==='Active') { %>
-                                                        <span class="badge badge-success bg-success">
-                                                            <%= article.blogStatus%>
-                                                        </span>
-                                                    <%}else { %>
-                                                        <span class="badge badge-warning bg-warning">
-                                                            <%= article.blogStatus%>
-                                                        </span>
-                                                    <%} %>
-                                                </td>
-                                                <td>
-                                                    <% if(article.blogStatus==='Published') { %>
-                                                    <span class="badge badge-warning bg-danger" onclick="WorkOnArticle('<%= article?.Slug %>','Delete')">
-                                                        Delete
-                                                    </span>
-                                                    <%}else { %>
-                                                    <span class="badge badge-warning bg-primary" onclick="WorkOnArticle('<%= article?.Slug %>','Edit')">
-                                                        Edit
-                                                    </span>
-                                                    <span class="badge badge-warning bg-warning" onclick="WorkOnArticle('<%= article?.Slug %>','Suspend')">
-                                                        Suspend 
-                                                    </span>
-                                                    <span class="badge badge-warning bg-warning" onclick="WorkOnArticle('<%= article?.Slug %>','Activate')">
-                                                        Publish 
-                                                    </span>
-                                                    <%}%>
+                                        <tr>
+                                            <td onclick="viewArticle('<%=article?.Slug %>')">
+                                                <%= num %>
+                                            </td>
+                                            <td onclick="viewArticle('<%=article?.Slug %>')">
+                                                <img src="/Uploads/<%= article.FeaturedImage %>"
+                                                    alt="<%= article.Title %>" style="width:50px !important">
+                                            </td>
+                                            <td class="text-sm"><%= article.Title %></td>
+                                            <td onclick="viewArticle('<%=article?.Slug %>')">
+                                                <% if(article.blogStatus==='Active') { %>
+                                                <span class="badge badge-success bg-success">
+                                                    <%= article.blogStatus%>
+                                                </span>
+                                                <%}else { %>
+                                                <span class="badge badge-warning bg-warning">
+                                                    <%= article.blogStatus%>
+                                                </span>
+                                                <%} %>
+                                            </td>
+                                            <td>
+                                                <% if(article.blogStatus==='Published') { %>
+                                                <span class="badge badge-warning bg-danger"
+                                                    onclick="WorkOnArticle('<%= article?.Slug %>','Delete')">
+                                                    Delete
+                                                </span>
+                                                <%}else { %>
+                                                <span class="badge badge-warning bg-primary"
+                                                    onclick="WorkOnArticle('<%= article?.Slug %>','Edit')">
+                                                    Edit
+                                                </span>
+                                                <span class="badge badge-warning bg-warning"
+                                                    onclick="WorkOnArticle('<%= article?.Slug %>','Suspend')">
+                                                    Suspend
+                                                </span>
+                                                <span class="badge badge-warning bg-warning"
+                                                    onclick="WorkOnArticle('<%= article?.Slug %>','Activate')">
+                                                    Publish
+                                                </span>
+                                                <%}%>
                                                 </td>
                                             </tr>
                                         <%  num = num+1 })%>
-                                    <%}else{ %>
+                                                <%}else{ %>
                                         <tr>
                                             <td colspan="5">
                                                 <div class="alert bg-warning">
@@ -108,219 +160,232 @@
                                                 </div>
                                             </td>
                                         </tr>
-                                    <% } %>
-                                </tbody>
-                            </table>
+                                        <% } %>
+                                    </tbody>
+                                </table>
+                            </div>
                         </div>
                     </div>
                 </div>
-            </div>
-            <div class="col-sm-7">
-                <div class="card">
-                    <div class="card-header">
-                        <h3 class="text-center">
-                            Add Article
-                        </h3>
-                    </div>
-                    <div class="card-body">
-                        <form id="articleForm" enctype="multipart/form-data">
-                            <div class="text-danger text-center" id="errorClass">
-                            </div>
-                            <div class="row">
-                                <div class="form-group">
-                                    <label for="Title" class="label-control">Title</label>
-                                    <input type="text" name="ArticleTitle" id="ArticleTitle" class="form-control">
+                <div class="col-sm-7">
+                    <div class="card">
+                        <div class="card-header">
+                            <h3 class="text-center">
+                                Add Article
+                            </h3>
+                        </div>
+                        <div class="card-body">
+                            <form id="articleForm" enctype="multipart/form-data">
+                                <div class="text-danger text-center" id="errorClass">
                                 </div>
-                            </div>
-                            <div class="row">
-                                <div class="col-sm-6">
-                                    <div class="form-group">
-                                        <label for="Title" class="label-control">Featured Image</label>
-                                        <input type="file" name="ArticleImage" id="ArticleImage" class="form-control" accept="image/*">
+                                <div class="row">
+                                    <div class="col-sm-12">
+                                        <div class="form-group">
+                                            <label for="Title" class="label-control">Title</label>
+                                            <input type="text" name="ArticleTitle" id="ArticleTitle"
+                                                class="form-control">
+                                        </div>
                                     </div>
                                 </div>
-                                <div class="col-sm-6">
-                                    <div class="form-group">
-                                        <label for="Title" class="label-control">Category</label>
-                                        <select name="ArticleCategory" id="ArticleCategory" class="form-control" onchange="getSubcategories(this.value)">
-                                            <option label="--Select Category--"></option>
-                                            <% if (categories.length > 0){ %>
+                                <div class="row">
+                                    <div class="col-sm-6">
+                                        <div class="form-group">
+                                            <label for="Title" class="label-control">Featured Image</label>
+                                            <input type="file" name="ArticleImage" id="ArticleImage"
+                                                class="form-control" accept="image/*">
+                                        </div>
+                                    </div>
+                                    <div class="col-sm-6">
+                                        <div class="form-group">
+                                            <label for="Title" class="label-control">Category</label>
+                                            <select name="ArticleCategory" id="ArticleCategory" class="form-control"
+                                                onchange="getSubcategories(this.value)">
+                                                <option label="--Select Category--"></option>
+                                                <% if (categories.length > 0){ %>
                                                 <% categories.map(item=>{ %>
-                                                    <option value="<%= item.categoryName %>"><%= item.categoryName %></option>
-                                               <%}) %>
-                                            <%}else{ %>
+                                                <option value="<%= item.categoryName %>"><%= item.categoryName %>
+                                                </option>
+                                                <%}) %>
+                                                <%}else{ %>
                                                 <option label="--No Category--" class="text-danger"></option>
-                                            <% } %>
-                                        </select>
+                                                <% } %>
+                                            </select>
+                                        </div>
                                     </div>
                                 </div>
-                            </div>
-                            <div class="row">
-                                <div class="col-sm-6">
-                                    <div class="form-group">
-                                        <label for="Title" class="label-control">Sub Category</label>
-                                        <select name="ArticleSubCategory" id="ArticlesSubCategory" class="form-control">
-                                        </select>
+                                <div class="row">
+                                    <div class="col-sm-6">
+                                        <div class="form-group">
+                                            <label for="Title" class="label-control">Sub Category</label>
+                                            <select name="ArticleSubCategory" id="ArticlesSubCategory"
+                                                class="form-control">
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div class="col-sm-6">
+                                        <div class="form-group">
+                                            <label for="Title" class="label-control">Publish Date</label>
+                                            <input type="date" name="PublishDate" id="ArticlePublish"
+                                                class="form-control"
+                                                min="<%= new Date().toISOString().split('T')[0] %>">
+                                        </div>
                                     </div>
                                 </div>
-                                <div class="col-sm-6">
-                                    <div class="form-group">
-                                        <label for="Title" class="label-control">Publish Date</label>
-                                        <input type="date" name="PublishDate" id="ArticlePublish" class="form-control" min="<%= new Date().toISOString().split('T')[0] %>">
+                                <div class="row">
+                                    <div class="col-sm-12">
+                                        <label for="content" class="label-control">Content</label>
+                                        <textarea name="content" id="ArticleContent" class="form-control"></textarea>
                                     </div>
                                 </div>
-                            </div>
-                            <div class="row">
-                                <div class="col-sm-12">
-                                    <label for="content" class="label-control">Content</label>
-                                    <textarea name="content" id="ArticleContent" class="form-control"></textarea>
+                                <div class="row">
+                                    <div class="col-sm-4 offset-sm-4">
+                                        <button class="btn bg-warning btn-block  mt-3">
+                                            Post Article
+                                        </button>
+                                    </div>
                                 </div>
-                            </div>
-                            <div class="row">
-                                <div class="col-sm-4 offset-sm-4">
-                                    <button class="btn bg-warning btn-block  mt-3">
-                                        Post Article
-                                    </button>
-                                </div>
-                            </div>
-                        </form>
+                            </form>
+                        </div>
                     </div>
                 </div>
             </div>
         </div>
     </div>
-</div>
-<%- include('../../../Layouts/Backend/Footer.ejs') %>
+</body>
 <script>
-    let editor;
- $(function () {
-    ClassicEditor
-        .create( document.querySelector( '#ArticleContent' ) ,{
-            placeholder: 'Please type your content Here',
-        }).then(newEditor=>{
-            editor = newEditor;
-        })
-        .catch( err => {
-           
-        } );
+    $(document).ready(function() {
+        $('#ArticleContent').summernote({
+        });
     });
-    const getSubcategories = async( data)=>{
-        const sfield = document.querySelector( 'select#ArticlesSubCategory');
-        sfield.innerHTML=""
+    let editor;
+    $(function() {
+        // ClassicEditor
+        //     .create( document.querySelector( '#ArticleContent' ) ,{
+        //         placeholder: 'Please type your content Here',
+        //         ckfinder:
+        //         {
+        //         uploadUrl: 'Ckeditor/'
+        //         }
+        //     }).then(newEditor=>{
+        //         editor = newEditor;
+        //     })
+        //     .catch( err => {
+
+        //     } );
+    });
+    const getSubcategories = async (data) => {
+        const sfield = document.querySelector('select#ArticlesSubCategory');
+        sfield.innerHTML = ""
         const opt = document.createElement("option")
-        opt.setAttribute("label","--Loading Data---")
+        opt.setAttribute("label", "--Loading Data---")
         opt.textContent = ""
-        if(data){
+        if (data) {
             sfield.appendChild(opt)
             //then fetch the data from the backend 
-            const res = await fetch("/Get/Subategories",{
-                method:'post',
-                body:JSON.stringify({
-                    CategoryName:data
+            const res = await fetch("/Get/Subategories", {
+                method: 'post',
+                body: JSON.stringify({
+                    CategoryName: data
                 }),
-                headers:{
-                    'Content-Type':'application/json'
+                headers: {
+                    'Content-Type': 'application/json'
                 }
             })
             const resp = await res.json()
-            if(resp.subcategories.length > 0){
+            if (resp.subcategories.length > 0) {
                 let subcategories = resp.subcategories
-                subcategories.forEach(item=>{
+                subcategories.forEach(item => {
                     const opt = document.createElement("option")
-                    opt.setAttribute("value",item.SubCategory)
-                    opt.setAttribute("class","bg-warning")
+                    opt.setAttribute("value", item.SubCategory)
+                    opt.setAttribute("class", "bg-warning")
                     opt.textContent = item.SubCategory
                     sfield.appendChild(opt)
                 })
-            }else{
+            } else {
                 const opt = document.createElement("option")
-                opt.setAttribute("label","--No Data Available---")
-                opt.setAttribute("class","bg-danger")
+                opt.setAttribute("label", "--No Data Available---")
+                opt.setAttribute("class", "bg-danger")
                 opt.textContent = ""
                 sfield.appendChild(opt)
             }
-            
-        }else{
-            sfield.innerHTML=""
+
+        } else {
+            sfield.innerHTML = ""
         }
     }
     const form = document.querySelector("form#articleForm")
     const ArticleError = document.querySelector("div#errorClass")
-    form.addEventListener("submit",async (e)=>{
-        ArticleError.textContent=""
+    form.addEventListener("submit", async (e) => {
+        ArticleError.textContent = ""
         e.preventDefault();
         const ArticleTitle = form.ArticleTitle.value
         const ArticleImage = form.ArticleImage.files
         const ArticleCategory = form.ArticleCategory.value
         const ArticleSubCategory = form.ArticleSubCategory.value
         const PublishDate = form.PublishDate.value
-        const Content = editor.getData();
-        if(!ArticleTitle){
+        const Content = form.content.value;
+        if (!ArticleTitle) {
             ArticleError.textContent = "Please Type A title for your Article"
             document.querySelector("input#ArticleTitle").classList.add("is-invalid")
             document.querySelector("input#ArticleTitle").classList.add("errorClass")
             ArticleError.classList.add("bg-warning")
             return;
-        }else{
+        } else {
             document.querySelector("input#ArticleTitle").classList.remove("is-invalid")
             document.querySelector("input#ArticleTitle").classList.remove("errorClass")
             document.querySelector("input#ArticleTitle").classList.add("is-valid")
             document.querySelector("input#ArticleTitle").classList.add("successClass")
         }
-        if(ArticleImage.length<1){
+        if (ArticleImage.length < 1) {
             ArticleError.textContent = "Please Upload an Image"
             document.querySelector("input#ArticleImage").classList.add("is-invalid")
             document.querySelector("input#ArticleImage").classList.add("errorClass")
             ArticleError.classList.add("bg-warning")
             return;
-        }
-        else{
+        } else {
             document.querySelector("input#ArticleImage").classList.remove("is-invalid")
             document.querySelector("input#ArticleImage").classList.remove("errorClass")
             document.querySelector("input#ArticleImage").classList.add("is-valid")
             document.querySelector("input#ArticleImage").classList.add("successClass")
         }
-        if(!ArticleCategory){
+        if (!ArticleCategory) {
             ArticleError.textContent = "Please Select a Category"
             document.querySelector("select#ArticleCategory").classList.add("is-invalid")
             document.querySelector("select#ArticleCategory").classList.add("errorSelect")
             ArticleError.classList.add("bg-warning")
             return;
-        }
-        else{
+        } else {
             document.querySelector("select#ArticleCategory").classList.remove("is-invalid")
             document.querySelector("select#ArticleCategory").classList.remove("errorClass")
             document.querySelector("select#ArticleCategory").classList.add("is-valid")
             document.querySelector("select#ArticleCategory").classList.add("successSelect")
         }
-        if(!ArticleSubCategory){
+        if (!ArticleSubCategory) {
             ArticleError.textContent = "Please Select a Sub Category"
             document.querySelector("select#ArticlesSubCategory").classList.add("is-invalid")
             document.querySelector("select#ArticlesSubCategory").classList.add("errorSelect")
             ArticleError.classList.add("bg-warning")
             return;
-        }
-        else{
+        } else {
             document.querySelector("select#ArticlesSubCategory").classList.remove("is-invalid")
             document.querySelector("select#ArticlesSubCategory").classList.remove("errorSelect")
             document.querySelector("select#ArticlesSubCategory").classList.add("is-valid")
             document.querySelector("select#ArticlesSubCategory").classList.add("successSelect")
         }
-        if(!PublishDate){
+        if (!PublishDate) {
             ArticleError.textContent = "Please Select a Publishing Date"
             document.querySelector("input#ArticlePublish").classList.add("is-invalid")
             document.querySelector("input#ArticlePublish").classList.add("errorClass")
             ArticleError.classList.add("bg-warning")
             return;
-        }
-        else{
+        } else {
             document.querySelector("input#ArticlePublish").classList.remove("is-invalid")
             document.querySelector("input#ArticlePublish").classList.remove("errorClass")
             document.querySelector("input#ArticlePublish").classList.add("is-valid")
             document.querySelector("input#ArticlePublish").classList.add("successClass")
         }
-        if(!Content){
-            swal('Content Missing', 'Please Type the Content','warning')
+        if (!Content) {
+            ArticleError.textContent = "Content is required"
             return;
         }
         //post the data to the backend 
@@ -330,73 +395,73 @@
         formData.append("ArticleSubCategory", ArticleSubCategory)
         formData.append("PublishDate", PublishDate)
         formData.append("Content", Content)
-        for(let i=0;i<ArticleImage.length;i++){
-            formData.append("FeaturedImage",ArticleImage[i])
+        for (let i = 0; i < ArticleImage.length; i++) {
+            formData.append("FeaturedImage", ArticleImage[i])
         }
-        const res = await fetch("/Post-articles",{
+        const res = await fetch("/Post-articles", {
             method: 'post',
-            body:formData,
+            body: formData,
         })
         const resp = await res.json()
-        swal(resp.status,`${resp.message}. Reloading...`,resp.status)
-        if(resp.status==='success'){
-            setTimeout(()=>{
+        ArticleError.textContent = `${resp.message}. Redirecting`
+        if (resp.status === 'success') {
+            setTimeout(() => {
                 location.href = location.href
-            },3000)
+            }, 3000)
         }
     })
 </script>
 <script>
-    const viewArticle = async (slug)=>{
+    const viewArticle = async (slug) => {
         const myModal = new bootstrap.Modal(document.getElementById('articleModal'))
         //get the article from the backend 
         const res = await fetch("/Get-Single-Article", {
-            method:'post',
-            body:JSON.stringify({
+            method: 'post',
+            body: JSON.stringify({
                 slug
             }),
-            headers:{
+            headers: {
                 'Content-Type': 'application/json'
             }
         })
         const resp = await res.json()
-        if(resp.status==='success'){
+        if (resp.status === 'success') {
             const article = resp.data
-            document.getElementById("alertModalTitle").textContent=article.Title
-            document.querySelector('img#featuredImage').setAttribute("src",`/Uploads/${article.FeaturedImage}`)
-            document.getElementById("articleCategory").textContent=article.blogCategory
-            document.getElementById("articleSubCategory").textContent=article.blogSubCategory
-            document.getElementById("articleCreated").textContent= `${article.createdAt.toString().split("T")[0]}`
-            document.getElementById("articleBody").innerHTML=article.BlogContent
+            document.getElementById("alertModalTitle").textContent = article.Title
+            document.querySelector('img#featuredImage').setAttribute("src", `/Uploads/${article.FeaturedImage}`)
+            document.getElementById("articleCategory").textContent = article.blogCategory
+            document.getElementById("articleSubCategory").textContent = article.blogSubCategory
+            document.getElementById("articleCreated").textContent =
+                `${article.createdAt.toString().split("T")[0]}`
+            document.getElementById("articleBody").innerHTML = article.BlogContent
             myModal.show()
-        }
-        else{
+        } else {
             //there is an error
-            swal(resp.status,resp.message,resp.status)
+            swal(resp.status, resp.message, resp.status)
         }
     }
-    WorkOnArticle = async (slug,action)=>{
+    WorkOnArticle = async (slug, action) => {
         //just post the data to the backend 
-        const res = await fetch("/WorkOnArticles",{
-            method:'POST',
-            body:JSON.stringify({
-                Slug:slug,
-                ACTION:action
+        const res = await fetch("/WorkOnArticles", {
+            method: 'POST',
+            body: JSON.stringify({
+                Slug: slug,
+                ACTION: action
             }),
-            headers:{
-                'Content-Type':'application/json'
+            headers: {
+                'Content-Type': 'application/json'
             }
         })
         const resp = await res.json()
-        swal(resp.status,`${resp.message}. Redirecting ...`,resp.status)
-        if(resp.redirect==='self'){
-            setTimeout(()=>{
+        swal(resp.status, `${resp.message}. Redirecting ...`, resp.status)
+        if (resp.redirect === 'self') {
+            setTimeout(() => {
                 location.reload()
-            },3000)
-        }else{
-            setTimeout(()=>{
+            }, 3000)
+        } else {
+            setTimeout(() => {
                 location.href = resp.redirect
-            },3000)
+            }, 3000)
         }
     }
 </script>

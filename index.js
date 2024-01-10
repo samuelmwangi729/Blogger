@@ -3,11 +3,13 @@ const cookieParser = require('cookie-parser')
 const homeRouter = require('./Routes/Home')
 const AuthenticatedRoutes = require('./Routes/AuthenticatedRoutes')
 const ConnectToMongo = require('./Utils/DatabaseConnector')
+const UploadImage = require('./Utils/UploadImage');
 const blogRoutes = require('./Routes/BlogRoutes')
 const isGuest = require('./Middlewares/Guest')
 const {loadCategories} = require("./Controller/HomeController")
 const helmet = require('helmet')
 const moment = require('moment')
+const fileupload = require('express-fileupload')
 require('dotenv').config()
 const app = express()
 const path = require('path')
@@ -45,6 +47,12 @@ app.use((err, req, res, next) =>{
         data:''
     })
 })
+app.post("/Articles/Ckeditor/",fileupload({createParentPath:true}),(req,res)=>{
+    UploadImage(req.files.upload)
+})
+app.post("/Edit-Article/Ckeditor/",fileupload({createParentPath:true}),(req,res)=>{
+    UploadImage(req.files.upload)
+})
 app.use(AuthenticatedRoutes)
 const server  = app.listen(
     process.env.PORT || 80,
@@ -57,6 +65,7 @@ const server  = app.listen(
 )
 
 app.use(async(req,res)=>{
+    console.log(req.url)
     const categories = await loadCategories()
     res.render('404.ejs',{categories})
 })
