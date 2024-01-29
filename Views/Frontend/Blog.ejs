@@ -34,6 +34,7 @@
                             <% if(articles.length>0){ %>
                                 <% articles.forEach(article=>{ %>
                                     <div class="col-sm-3">
+                                        <a href="/blog/<%= article.Slug %>">
                                         <div class="pq-blog-post">
                                             <div class="pq-post-media">
                                                 <img loading="lazy" src="<%= `/Uploads/${article.FeaturedImage}` %>" alt="<%= article.Title %>" style="width:100%;height:200px">
@@ -47,10 +48,10 @@
                                                         </li>
                                                     </ul>
                                                 </div>
-                                                <h5 class="pq-blog-title"><a href="/blog/<%= article.Slug %>"><%= article.Title.substring(0,40) %></a></h5>
-                                                <p><%- article.BlogContent.substring(0,30) %></p>
+                                                <h5 class="pq-blog-title"><a href="/blog/<%= article.Slug %>"><%= article.Title.substring(0,80) %></a></h5>
                                             </div>
                                         </div>
+                                        </a>
                                     </div>
                                 <%}) %>
                            <% }else{ %>

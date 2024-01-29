@@ -4,7 +4,8 @@ const UploadImage = require('../Utils/UploadImage');
 const RemoveFile = require('../Utils/RemoveFile');
 const asyncHandler = require('express-async-handler')
 const {loadCategories} = require('./HomeController')
-
+const User = require('../Models/Users')
+const Comment = require('../Models/Comment')
 let articleSlug;
 const loadAllCategories = asyncHandler(async()=>{
     const cats = await loadCategories()
@@ -307,11 +308,54 @@ GetSingleArticle = asyncHandler(async (req,res)=>{
     //get the article from the backend
     const categories = await loadAllCategories()
     const article = await Blog.findOne({Slug:Slug,blogStatus:"Published"})
+    //load comments from the backend 
+    const comments = await Comment.find({blogTitle:article.Title},{
+        _id:0,
+        userEmail:0,
+        commentStatus:0,
+        __v:0
+    })
     if(!article){
         res.redirect("/")
     }else{
         const posts = await Blog.find({blogStatus:"Published"})
-        res.render('Frontend/Blog_Single',{article,categories,posts})
+        res.render('Frontend/Blog_Single',{article,categories,posts,comments})
     }
  }
-module.exports ={Index,loadSingleBlog,LoadCategoriesBlog,UpdatePostedArticle,EditArticle,WorkOnArticles,GetSingleArticle,GetPostData,GetSubcategories}
+ const GetpostComment = asyncHandler(async(req,res)=>{
+    //check if the comment exists 
+    
+    //check if the user exists 
+    const {email,message,Slug} = req.body
+    const user = await User.findOne({emailAddress:email})
+    if(user){
+        //then continue
+        const blog = await Blog.findOne({Slug:Slug,blogStatus:"Published"})
+        if(blog){
+            //clean input data by escaping the input
+            const comment = new Comment({
+                blogTitle:blog.Title,
+                userName:`${user.FirstName} ${user.LastName}`,
+                userEmail:user.emailAddress,
+                commentContent:message
+            })
+            await comment.save()
+            res.status(400).json({
+                status:'success',
+                message:`Comment saved successfully`
+            })
+
+        }else{
+            res.status(400).json({
+                status:'error',
+                message:`Try harder ..;`
+            })
+        }
+    }else{
+        res.status(400).json({
+            status:'error',
+            message:`You Must be registered using the email <u style='color:black'>${email}</u> to make a comment`
+        })
+    }
+ })
+module.exports ={Index,loadSingleBlog,LoadCategoriesBlog,UpdatePostedArticle,EditArticle,WorkOnArticles,GetpostComment,GetSingleArticle,GetPostData,GetSubcategories}

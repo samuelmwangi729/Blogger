@@ -326,28 +326,14 @@ Design and Developed by: PeacefulQode
         [ Form Validation ]
         ==================================================*/
 
-        jQuery(".pq-applyform .form-btn").click(function () {
-            var first_name = jQuery('.pq-applyform #first-name').val();
-            var phone = jQuery('#phone-number').val();
+        jQuery(".pq-applyform .form-btn").click( async function () {
             var email = jQuery('#e-mail').val();
             var message = jQuery('#message').val();
-            var subject = jQuery('#subject').val();
-            var url = jQuery('#url').val();
+            var Slug= jQuery('#Slug').val();
             var result;
-
             jQuery('.pq-applyform .pq-message').remove();
             jQuery('.pq-applyform .pq-thank-you-message').remove();
 
-            console.log(first_name);
-
-            if (first_name == '' || first_name == undefined) {
-                jQuery("<span class='pq-name-error-message pq-message'>Please fill the field</span>").insertAfter('.pq-applyform .name-field');
-                result = false;
-            }
-            else {
-                jQuery('.pq-name-error-message').remove();
-                result = true;
-            }
 
             if (email == '' || email == undefined) {
                 jQuery("<span class='pq-email-error-message pq-message'>Please fill the field</span>").insertAfter('.pq-applyform .e-mail-field');
@@ -355,15 +341,6 @@ Design and Developed by: PeacefulQode
             }
             else {
                 jQuery('.pq-email-error-message').remove();
-                result = true;
-            }
-
-            if (phone == '' || phone == undefined) {
-                jQuery("<span class='pq-phone-error-message pq-message'>Please fill the field</span>").insertAfter('.pq-applyform .phone-number-field');
-                result = false;
-            }
-            else {
-                jQuery('.pq-phone-error-message').remove();
                 result = true;
             }
 
@@ -376,26 +353,30 @@ Design and Developed by: PeacefulQode
                 result = true;
             }
 
-            if (subject == '' || subject == undefined) {
-                jQuery("<span class='pq-subject-error-message pq-message'>Please fill the field</span>").insertAfter('.pq-applyform .subject-field');
-                result = false;
-            }
-            else {
-                jQuery('.pq-subject-error-message').remove();
-                result = true;
-            }
-
-            if (url == '' || url == undefined) {
-                jQuery("<span class='pq-url-error-message pq-message'>Please fill the field</span>").insertAfter('.pq-applyform .url-field');
-                result = false;
-            }
-            else {
-                jQuery('.pq-url-error-message').remove();
-                result = true;
-            }
-
             if (result == true) {
-                jQuery("<span class='pq-thank-you-message pq-text-dark ms-5'> Thank You For Filling The form</span>").insertAfter('.pq-applyform .pq-button');
+                //submit the form 
+                const res = await fetch("/Post-Comment-Blog",{
+                    method: 'POST',
+                    body: JSON.stringify({
+                        email,
+                        message,
+                        Slug
+                    }),
+                    headers:{
+                        'Content-Type': 'application/json'
+                    }
+                })
+                const resp = await res.json()
+                if(resp.status==='error'){
+                    jQuery(`<span class='pq-email-error-message pq-message'>${resp.message}</span>`).insertBefore('.pq-applyform .e-mail-field');
+                }else{
+
+                    jQuery(`<span class='pq-thank-you-message pq-text-dark ms-5 text-success' style='color:green !important'>${resp.message}</span>`).insertAfter('.pq-applyform .pq-button');
+
+                    setTimeout(()=>{
+                        location.reload();
+                    },3000)
+                }
             }
         });
     });
