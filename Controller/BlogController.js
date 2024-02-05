@@ -358,4 +358,33 @@ GetSingleArticle = asyncHandler(async (req,res)=>{
         })
     }
  })
-module.exports ={Index,loadSingleBlog,LoadCategoriesBlog,UpdatePostedArticle,EditArticle,WorkOnArticles,GetpostComment,GetSingleArticle,GetPostData,GetSubcategories}
+ getSubCategory = async (req, res)=>{
+    //get the subcategory
+    //load the categories 
+    const categories = await loadAllCategories()
+    const {Slug} = req.params
+    const subcategory = await SubCategory.findOne({SubCategory:Slug},{
+        _id:0,
+        __v:0,
+    })
+    //check the sub categories from the database 
+    if(subcategory){
+        //load blogs with the sub cateegory 
+        const articles = await Blog.find({blogSubCategory:subcategory.SubCategory})
+        if(articles){
+            res.render('Frontend/Blog_subcategory',{subcategory,categories,articles})
+        }else{
+            res.redirect(`/Category/${subcategory.CategoryName}`)
+        }
+    }else{
+        res.redirect("/Blog")
+    }
+
+ }
+ const BlogArticles = async(req,res)=>{
+    //load all categories   
+    const categories = await loadAllCategories()
+    const articles = await Blog.find({blogStatus:"Published"})
+    res.render('Frontend/Articles',{categories,articles})
+ }
+module.exports ={Index,loadSingleBlog,getSubCategory,LoadCategoriesBlog,UpdatePostedArticle,BlogArticles,EditArticle,WorkOnArticles,GetpostComment,GetSingleArticle,GetPostData,GetSubcategories}

@@ -65,7 +65,7 @@ const server  = app.listen(
 )
 
 app.use(async(req,res)=>{
-    console.log(req.url)
+    // console.log(req.url)
     const categories = await loadCategories()
     res.render('404.ejs',{categories})
 })
