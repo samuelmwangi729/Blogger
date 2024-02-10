@@ -309,7 +309,7 @@ GetSingleArticle = asyncHandler(async (req,res)=>{
     const categories = await loadAllCategories()
     const article = await Blog.findOne({Slug:Slug,blogStatus:"Published"})
     //load comments from the backend 
-    const comments = await Comment.find({blogTitle:article.Title},{
+    const comments = await Comment.find({blogTitle:article.Title,commentStatus:"Approved"},{
         _id:0,
         userEmail:0,
         commentStatus:0,
@@ -387,4 +387,38 @@ GetSingleArticle = asyncHandler(async (req,res)=>{
     const articles = await Blog.find({blogStatus:"Published"})
     res.render('Frontend/Articles',{categories,articles})
  }
-module.exports ={Index,loadSingleBlog,getSubCategory,LoadCategoriesBlog,UpdatePostedArticle,BlogArticles,EditArticle,WorkOnArticles,GetpostComment,GetSingleArticle,GetPostData,GetSubcategories}
+ const getAllComments = asyncHandler(async(req,res)=>{
+    const comments = await Comment.find()
+    res.render('Backend/Blog/Comments',{comments})
+ })
+ WorkOnComments = asyncHandler(async(req,res)=>{
+    const {ACTION,ID} = req.body
+    const comment = await Comment.findById(ID)
+    const username = await User.findOne({emailAddress:comment.userEmail}).select("FirstName LastName")
+    if(ACTION ==='Approve'){
+        comment.commentStatus='Approved'
+        comment.userName = `${username.FirstName} ${username.LastName}`
+        comment.save()
+        res.status(200).json({
+            code:200,
+            message:'Comment Approved',
+            status:'success'
+        })
+    }else if(ACTION==='Remove'){
+        comment.commentStatus='Removed'
+        comment.userName = `${username.FirstName} ${username.LastName}`
+        comment.save()
+        res.status(200).json({
+            code:200,
+            message:'Comment Removed',
+            status:'success'
+        })
+    }else{
+        res.status(400).json({
+            code:400,
+            message:'Bad Request',
+            status:'error'
+        })
+    }
+ })
+module.exports ={Index,loadSingleBlog,getSubCategory,LoadCategoriesBlog,UpdatePostedArticle,WorkOnComments,getAllComments,BlogArticles,EditArticle,WorkOnArticles,GetpostComment,GetSingleArticle,GetPostData,GetSubcategories}
