@@ -1,8 +1,8 @@
 const {Router} = require('express')
 const {Home,About,Contact,Login,Logout,Reset,Register,Passwords,getNewPasswords,Register_user,Login_User,get_reset_password,GetToken} = require('../Controller/HomeController.js')
+const passport = require('passport')
 const isGuest = require('../Middlewares/Guest.js')
 const homeRouter = Router()
-
 homeRouter.get('/',Home)
 .get('/About',About)
 .get('/Logout',Logout)
@@ -16,4 +16,15 @@ homeRouter.get('/',Home)
 .post("/reset-password",get_reset_password)
 .get("/Password-Reset-Token/:userToken",GetToken)
 .post("/get-new-posted-password",getNewPasswords)
+.get("/Authentication/Google",passport.authenticate('google', { scope: ['profile'] }),(req,res)=>{
+    
+})
+.get("/Authentication/Google/Callback",
+passport.authenticate('google',{
+    failureRedirect: '/Login',
+    successRedirect:'/Dashboard'
+}),(req,res)=>{
+    console.log('callback done')
+})
+
 module.exports = homeRouter

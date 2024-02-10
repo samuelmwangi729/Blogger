@@ -1,4 +1,6 @@
 const express = require('express')
+const passport = require('passport')
+const {Strategy} = require('passport-google-oauth20')
 const cookieParser = require('cookie-parser')
 const homeRouter = require('./Routes/Home')
 const AuthenticatedRoutes = require('./Routes/AuthenticatedRoutes')
@@ -21,11 +23,22 @@ app.get("*", async (req, res,next) =>{
     res.locals.moment = moment
     next()
 })
+const AUTH_OPTIONS = {
+    callbackURL:"/Authorization/Google/Callback",
+    clientID:process.env.GOOGLE_OAUTH_CLIENTID,
+    clientSecret:process.env.GOOGLE_OAUTH_SECRET
+}
+const verifyCallback = (accessToken,refreshToken,profile,done)=>{
+    console.log(profile)
+    done(null,profile)
+}
+passport.use(new Strategy(AUTH_OPTIONS,verifyCallback))
 app.use(
     helmet({
       contentSecurityPolicy: false,
     })
   );
+  app.use(passport.initialize())
 app.use(express.urlencoded({extended: true}))
 app.use(express.json())
 app.use(cookieParser())
