@@ -171,8 +171,8 @@ get_reset_password = async(req,res)=>{
         })
     }else{
         res.status(400).json({
-            status:'error',
-            message:'Unknown Error Occurred'
+            status:'success',
+            message:'If the Account exists, An email has been sent with your reset password'
         })
     }
 }

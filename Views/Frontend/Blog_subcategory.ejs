@@ -44,11 +44,11 @@
                                                     <ul>
                                                         <li class="pq-post-date"><%= moment(article.createdAt, "YYYYMMDD").fromNow(); %></li>
                                                         <li class="pq-post-tag">
-                                                            <a href="/blog/<%= article.Slug %>"><i class="fa fa-tag"></i><%= article.blogCategory %></a>
+                                                            <a href="/blog/<%= article.Slug %>"><i class="fa fa-tag"></i><%= article.blogCategory %> > <%= article.blogSubCategory %></a>
                                                         </li>
                                                     </ul>
                                                 </div>
-                                                <h5 class="pq-blog-title"><a href="/blog/<%= article.Slug %>"><%= article.Title.substring(0,80) %></a></h5>
+                                                <h5 class="pq-blog-title"><a href="/blog/<%= article.Slug %>"><%= article.Title.substring(0,80) %>.....</a></h5>
                                             </div>
                                         </div>
                                         </a>

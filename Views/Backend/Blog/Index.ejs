@@ -2,7 +2,7 @@
 
 <head>
     <meta charset="UTF-8">
-    <title>Summernote with Bootstrap 4</title>
+    <title><%= apptitle %>   <%= user.LastName %> Create Blogs</title>
     <script src="https://code.jquery.com/jquery-3.5.1.min.js" crossorigin="anonymous"></script>
     <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js"
         integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous">
@@ -93,19 +93,19 @@
                     <div class="card bg-white">
                         <div class="card-header">
                             <h2 class="text-center">
-                                Available Articles
+                                My Articles
                             </h2>
                         </div>
                         <div class="card-body">
                             <div class="table-responsive">
-                                <table class="table table-border">
-                                    <thead>
+                                <table class="table table-bordered p-0 table-condensed">
+                                    <thead class="text-sm">
                                         <tr>
-                                            <th>S/No</th>
-                                            <th>Featured Image</th>
-                                            <th>Title</th>
-                                            <th>Status</th>
-                                            <th>Actions</th>
+                                            <td>No</td>
+                                            <td>Image</td>
+                                            <td>Title</td>
+                                            <td>Status</td>
+                                            <td>Actions</td>
                                         </tr>
                                     </thead>
                                     <tbody>
@@ -117,13 +117,13 @@
                                             </td>
                                             <td onclick="viewArticle('<%=article?.Slug %>')">
                                                 <img src="/Uploads/<%= article.FeaturedImage %>"
-                                                    alt="<%= article.Title %>" style="width:50px !important">
+                                                    alt="<%= article.Title %>" style="width:30px !important;height:30px !important">
                                             </td>
-                                            <td class="text-sm"><%= article.Title %></td>
+                                            <td class="text-sm" style="font-size:12px !important"><%= article.Title %></td>
                                             <td onclick="viewArticle('<%=article?.Slug %>')">
-                                                <% if(article.blogStatus==='Active') { %>
+                                                <% if(article.blogStatus==='Published') { %>
                                                 <span class="badge badge-success bg-success">
-                                                    <%= article.blogStatus%>
+                                                    Visible
                                                 </span>
                                                 <%}else { %>
                                                 <span class="badge badge-warning bg-warning">
@@ -138,15 +138,15 @@
                                                     Delete
                                                 </span>
                                                 <%}else { %>
-                                                <span class="badge badge-warning bg-primary"
+                                                <span class="badge badge-warning bg-primary mt-2"
                                                     onclick="WorkOnArticle('<%= article?.Slug %>','Edit')">
                                                     Edit
                                                 </span>
-                                                <span class="badge badge-warning bg-warning"
+                                                <span class="badge badge-warning bg-warning mt-2"
                                                     onclick="WorkOnArticle('<%= article?.Slug %>','Suspend')">
                                                     Suspend
                                                 </span>
-                                                <span class="badge badge-warning bg-warning"
+                                                <span class="badge badge-success bg-success mt-2"
                                                     onclick="WorkOnArticle('<%= article?.Slug %>','Activate')">
                                                     Publish
                                                 </span>
@@ -241,7 +241,7 @@
                                 </div>
                                 <div class="row">
                                     <div class="col-sm-4 offset-sm-4">
-                                        <button class="btn bg-warning btn-block  mt-3">
+                                        <button class="btn bg-success text-white btn-block  mt-3">
                                             Post Article
                                         </button>
                                     </div>
@@ -258,22 +258,6 @@
     $(document).ready(function() {
         $('#ArticleContent').summernote({
         });
-    });
-    let editor;
-    $(function() {
-        // ClassicEditor
-        //     .create( document.querySelector( '#ArticleContent' ) ,{
-        //         placeholder: 'Please type your content Here',
-        //         ckfinder:
-        //         {
-        //         uploadUrl: 'Ckeditor/'
-        //         }
-        //     }).then(newEditor=>{
-        //         editor = newEditor;
-        //     })
-        //     .catch( err => {
-
-        //     } );
     });
     const getSubcategories = async (data) => {
         const sfield = document.querySelector('select#ArticlesSubCategory');

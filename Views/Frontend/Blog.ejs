@@ -33,7 +33,7 @@
                         <div class="row">
                             <% if(articles.length>0){ %>
                                 <% articles.forEach(article=>{ %>
-                                    <div class="col-sm-3">
+                                    <div class="col-sm-3" title="<%= article.Title%>">
                                         <a href="/blog/<%= article.Slug %>">
                                         <div class="pq-blog-post">
                                             <div class="pq-post-media">
@@ -48,7 +48,7 @@
                                                         </li>
                                                     </ul>
                                                 </div>
-                                                <h5 class="pq-blog-title"><a href="/blog/<%= article.Slug %>"><%= article.Title.substring(0,80) %></a></h5>
+                                                <h5 class="pq-blog-title"><a href="/blog/<%= article.Slug %>" title="<%= article.Title %>"><%= article.Title.substring(0,30) %>...</a></h5>
                                             </div>
                                         </div>
                                         </a>
