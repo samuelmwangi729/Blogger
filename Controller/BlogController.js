@@ -6,6 +6,7 @@ const asyncHandler = require('express-async-handler')
 const {loadCategories} = require('./HomeController')
 const User = require('../Models/Users')
 const Comment = require('../Models/Comment')
+const {Membership} = require('../Models/Memberships')
 let articleSlug;
 const loadAllCategories = asyncHandler(async()=>{
     const cats = await loadCategories()
@@ -421,4 +422,17 @@ GetSingleArticle = asyncHandler(async (req,res)=>{
         })
     }
  })
-module.exports ={Index,loadSingleBlog,getSubCategory,LoadCategoriesBlog,UpdatePostedArticle,WorkOnComments,getAllComments,BlogArticles,EditArticle,WorkOnArticles,GetpostComment,GetSingleArticle,GetPostData,GetSubcategories}
+
+ createMemberships = asyncHandler(
+    async(req,res)=>{
+        //write the logic here 
+        const memberships = await Membership.find()
+        res.render('Backend/Membership/Index',{memberships})
+    }
+ )
+ const MembershipData = asyncHandler(async(req,res)=>{
+    const {membershipType,Amount} = req.body
+    //check if the membership exists 
+    const membership = await Membership.findOne({MembershipType:membershipType})
+ })
+module.exports ={Index,loadSingleBlog,getSubCategory,LoadCategoriesBlog,UpdatePostedArticle,WorkOnComments,getAllComments,MembershipData,createMemberships,BlogArticles,EditArticle,WorkOnArticles,GetpostComment,GetSingleArticle,GetPostData,GetSubcategories}

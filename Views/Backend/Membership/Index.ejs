@@ -1,0 +1,120 @@
+<%- include('../../../Layouts/Backend/Header.ejs') %>
+<div class="container">
+    <!-- main body content goes here -->
+    <div class="row">
+        <div class="col-sm-6">
+            <div class="card">
+                <div class="card-heading">
+                    <h2 class="text-center underline">
+                        Create Membership Plans
+                    </h2>
+                </div>
+                <div class="card-bodyD">
+                    <div class="form">
+                        <form id="membershipForm">
+                            <div class="row">
+                                <div class="col-sm-10 offset-sm-1">
+                                    <label for="membershidp" class="label-control">Membership</label> <span id="membershipError" class="text-danger"></span>
+                                    <input type="text" name="Membership" id="membership" class="form-control" placeholder="Membership Here..." autofocus>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-sm-10 offset-sm-1">
+                                    <label for="membership" class="label-control">Membership Amount</label> <span id="membershipAmountError" class="text-danger"></span>
+                                    <input type="number" name="MembershipAmount" id="membershipAmount" class="form-control" placeholder="MembershipAmount Here..." autofocus>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-sm-10 offset-sm-1">
+                                    <label for="membershipValidity" class="label-control">MembershipValidity</label> <span id="membershipValidityError" class="text-danger"></span>
+                                    <input type="text" name="MembershipValidity" id="membershipValidity" class="form-control" placeholder="MembershipValidity Here..." autofocus>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-sm-6 offset-sm-3">
+                                    <button class="btn btn-warning" type="submit" style="width:50%;margin-left: 25%;">Submit</button>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-sm-6">
+            <div class="card">
+                <div class="card-heading">
+                    <h2 class="text-center">
+                        Available Memberships
+                    </h2>
+                </div>
+                <div class="card-body">
+                    <div class="table-responsive">
+                        <table class="table table-hover table-striped table-bordered table-condensed">
+                            <thead>
+                                <tr>
+                                    <th>Membership</th>
+                                    <th>Status</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <%if(memberships.length>0){%>
+                                    <% memberships.forEach(item=>{%>
+                                        <tr>
+                                            <td>
+                                                <%= item.membershipType %>
+                                            </td>
+                                            <td>
+                                                <%= item.Status %>
+                                            </td>
+                                            <td>
+                                                <a href="http://">View</a>
+                                                <a href="http://">Delete</a>
+                                                <a href="http://">SUspend</a>
+                                            </td>
+                                        </tr>
+                                    <% })%>
+                                <%}else{%>
+                                    <tr>
+                                        <td colspan="3">
+                                            <div class="alert alert-danger bg-danger text-white">
+                                                <strong>Error</strong> No Memberships Present
+                                            </div>
+                                        </td>
+                                    </tr>
+                                <%}%>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<%- include('../../../Layouts/Backend/Footer.ejs') %>
+<script>
+    const form = document.querySelector('form#membershipForm')
+    const membership = form.Membership.value
+    const MembershipAmount = form.MembershipAmount.value
+    const MembershipValidity = form.MembershipValidity.value
+    document.querySelector('span#membershipError').textContent = ''
+    form.addEventListener('submit',async(e)=>{
+        e.preventDefault();
+        alert(membership)
+        if(!membership)
+           {
+            document.querySelector('span#membershipError').textContent = 'Membership Type is required'
+            return;
+           }
+        if(!MembershipAmount)
+            {
+                document.querySelector('span#membershipAmountError').textContent = 'Membership Amount is required'
+            return;
+            }
+        if(!MembershipValidity)
+           {
+            document.querySelector('span#membershipValidityError').textContent = 'Membership Validity is required'
+            return;
+           }
+    })
+</script>
