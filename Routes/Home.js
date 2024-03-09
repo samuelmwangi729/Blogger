@@ -1,5 +1,5 @@
 const {Router} = require('express')
-const {Home,About,Contact,Login,Logout,Reset,Register,Passwords,getNewPasswords,Register_user,Login_User,get_reset_password,GetToken} = require('../Controller/HomeController.js')
+const {Home,About,Contact,Suspended,Login,Logout,Reset,Banned,Register,Passwords,getNewPasswords,Register_user,Login_User,get_reset_password,GetToken} = require('../Controller/HomeController.js')
 const passport = require('passport')
 const isGuest = require('../Middlewares/Guest.js')
 const homeRouter = Router()
@@ -16,6 +16,8 @@ homeRouter.get('/',Home)
 .post("/reset-password",get_reset_password)
 .get("/Password-Reset-Token/:userToken",GetToken)
 .post("/get-new-posted-password",getNewPasswords)
+.get("/Account/Banned",Banned)
+.get("/Account/Suspended",Suspended)
 .get("/Authentication/Google",passport.authenticate('google', { scope: ['profile'] }),(req,res)=>{
     
 })

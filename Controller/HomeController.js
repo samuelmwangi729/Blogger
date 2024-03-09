@@ -60,8 +60,9 @@ const Logout = async (req, res) => {
     res.redirect('/')
 }
 const Reset = async (req, res) => {
+    let userEmail=""
     const categories = await loadCategories()
-    res.render('Frontend/Reset',{categories})
+    res.render('Frontend/Reset',{categories,userEmail})
 }
 const Passwords = async (req, res) => {
     const categories = await loadCategories()
@@ -98,7 +99,6 @@ Register_user = async (req, res) =>{
                 Password:await getEncryptedPassword(password),
             })
             await newUser.save()
-            console.log(newUser)
             res.status(200).json({
                 status:'success',
                 message:'User created successfully',
@@ -124,7 +124,6 @@ const getEncryptedPassword = async(pass)=>{
     return newPass
 }
 Login_User = async (req,res)=>{
-    console.log(req.body)
     const{email,Password,RememberMe}  = req.body
     const login_Status = await User.Login(email,Password)
     if(login_Status){
@@ -231,5 +230,10 @@ getNewPasswords = async(req, res)=>{
     }
     
 }
-
-module.exports = { Home,loadCategories, About, Contact, Login, Logout, Reset, Register, Register_user,GetToken,get_reset_password,Login_User,getNewPasswords, Passwords,loadCategories }
+Banned = (req,res)=>{
+    res.render('Frontend/Banned')
+}
+Suspended = (req,res)=>{
+    res.render('Frontend/Suspended')
+}
+module.exports = { Home,Banned,Suspended,loadCategories, About, Contact, Login, Logout, Reset, Register, Register_user,GetToken,get_reset_password,Login_User,getNewPasswords, Passwords,loadCategories }

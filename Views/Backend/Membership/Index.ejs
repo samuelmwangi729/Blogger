@@ -9,24 +9,24 @@
                         Create Membership Plans
                     </h2>
                 </div>
-                <div class="card-bodyD">
+                <div class="card-body">
                     <div class="form">
-                        <form id="membershipForm">
+                        <form method="POST" action="">
                             <div class="row">
                                 <div class="col-sm-10 offset-sm-1">
-                                    <label for="membershidp" class="label-control">Membership</label> <span id="membershipError" class="text-danger"></span>
+                                    <label for="membershidp" class="label-control">Membership</label> 
                                     <input type="text" name="Membership" id="membership" class="form-control" placeholder="Membership Here..." autofocus>
                                 </div>
                             </div>
                             <div class="row">
                                 <div class="col-sm-10 offset-sm-1">
-                                    <label for="membership" class="label-control">Membership Amount</label> <span id="membershipAmountError" class="text-danger"></span>
+                                    <label for="membership" class="label-control">Membership Amount</label> 
                                     <input type="number" name="MembershipAmount" id="membershipAmount" class="form-control" placeholder="MembershipAmount Here..." autofocus>
                                 </div>
                             </div>
                             <div class="row">
                                 <div class="col-sm-10 offset-sm-1">
-                                    <label for="membershipValidity" class="label-control">MembershipValidity</label> <span id="membershipValidityError" class="text-danger"></span>
+                                    <label for="membershipValidity" class="label-control">MembershipValidity</label> 
                                     <input type="text" name="MembershipValidity" id="membershipValidity" class="form-control" placeholder="MembershipValidity Here..." autofocus>
                                 </div>
                             </div>
@@ -92,29 +92,3 @@
     </div>
 </div>
 <%- include('../../../Layouts/Backend/Footer.ejs') %>
-<script>
-    const form = document.querySelector('form#membershipForm')
-    const membership = form.Membership.value
-    const MembershipAmount = form.MembershipAmount.value
-    const MembershipValidity = form.MembershipValidity.value
-    document.querySelector('span#membershipError').textContent = ''
-    form.addEventListener('submit',async(e)=>{
-        e.preventDefault();
-        alert(membership)
-        if(!membership)
-           {
-            document.querySelector('span#membershipError').textContent = 'Membership Type is required'
-            return;
-           }
-        if(!MembershipAmount)
-            {
-                document.querySelector('span#membershipAmountError').textContent = 'Membership Amount is required'
-            return;
-            }
-        if(!MembershipValidity)
-           {
-            document.querySelector('span#membershipValidityError').textContent = 'Membership Validity is required'
-            return;
-           }
-    })
-</script>

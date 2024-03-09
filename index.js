@@ -9,6 +9,7 @@ const UploadImage = require('./Utils/UploadImage');
 const blogRoutes = require('./Routes/BlogRoutes')
 const isGuest = require('./Middlewares/Guest')
 const {loadCategories} = require("./Controller/HomeController")
+const UserRouter = require('./Routes/UsersRoutes')
 const helmet = require('helmet')
 const moment = require('moment')
 const fileupload = require('express-fileupload')
@@ -48,6 +49,7 @@ app.set('view engine','ejs')
 app.set('views','Views')
 app.use(homeRouter)
 app.use(blogRoutes)
+app.use(UserRouter)
 app.use((err, req, res, next) =>{
     const status = err?.status?err?.status : ' failed'
     const message = err?.message?err?.message:res.locals.errorMessage

@@ -8,7 +8,11 @@
                     <fieldset class="border border-danger rounded">
                         <legend>
                             <h2 class="text-center">
-                                Enter your Email Adddress
+                               <% if(user) { %>
+                                    Click the reset button 
+                                <%}else { %>
+                                    Enter your Email Adddress
+                                <%}%>
                             </h2>
                         </legend>
                         <div class="card border-0">
@@ -17,7 +21,8 @@
                                     <div class="col-sm-12">
                                         <h6 class="text-danger" id="errorText"></h6>
                                         <label for="Email Address" class="label-control">Email Address</label>
-                                        <input type="email" name="emailAddress" id="email" class="form-control" placeholder="Enter your Email Address">
+                                        <input type="email" name="emailAddress" id="email" class="form-control" 
+                                        <% if(userEmail.length==0){%> placeholder="Enter your Email Address"<%}else{%> value="<%= userEmail %>" <%} %>>
                                     </div>
                                 </div>
                                 <div class="row mb-2">
@@ -31,10 +36,12 @@
                                                Reset
                                             </button>
                                         </div>
+                                        <% if(user){}else{%>
                                         <div class="d-flex justify-content-between">
                                             <a href="/Login" class="btn btn-outline-success">Sign In</a>
                                             <a href="/Register" class="btn btn-outline-primary">Sign Up</a>
                                         </div>
+                                        <%}%>
                                 </div>
                             </div>
                         </div>

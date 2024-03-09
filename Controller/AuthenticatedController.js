@@ -7,7 +7,11 @@ const generateRandom =  require('../Utils/genRandom.js')
 const {Category,SubCategory} = require('../Models/Category.js')
 const RemoveFile = require('../Utils/RemoveFile.js')
 const Index = async (req, res)=>{
-    res.render('Backend/Index')
+    if(res.locals.user.UserRole==='Admin'){
+        res.render('Backend/Index')
+    }else{
+        res.render('Backend/Normal')
+    }
 }
 
 ProfileController = async(req,res)=>{

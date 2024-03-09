@@ -74,9 +74,16 @@ VerifyAndGetUser = async(tkn, req,res,next)=>{
             //if not, redirect here 
             res.locals.user = user
             res.locals.errorMessage=""
+            console.log(user)
             if(user.AccountStatus==='Verified'){
                 next()
-            }else{
+            }else if(user.AccountStatus==='Banned'){
+                res.redirect('/Account/Banned')
+            }
+            else if(user.AccountStatus==='Suspended'){
+                res.redirect('/Account/Suspended')
+            }
+            else{
                 if(req.url==="/Verify/Account"){
                     next()
                 }

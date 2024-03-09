@@ -1,0 +1,79 @@
+<%- include('../../../Layouts/Backend/Header.ejs') %>
+<div>
+    <!-- main body content goes here -->
+    <div class="container">
+        <div class="row">
+            <div class="col-sm-12">
+                <h2 class="text-center">
+                    Available Registered Users
+                </h2>
+                <div class="table-responsive">
+                    <table class="table table-condensed table-bordered">
+                        <thead>
+                            <tr>
+                                <th>S/NO</th>
+                                <th>Name</th>
+                                <th>Email</th>
+                                <th>Role</th>
+                                <th>Account Status</th>
+                                <th>Staff</th>
+                                <th>Followers</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <% let id=1; if(users.length>0){ %>
+                                <% users.forEach(user=>{ %>
+                                    <tr>
+                                        <td><%= id %></td>
+                                        <td><%= user.FirstName %> <%= user.LastName %></td>
+                                        <td><%= user.emailAddress %> </td>
+                                        <td><%= user.UserRole %> </td>
+                                        <td>
+                                            <% if(user.AccountStatus==='Verified'){ %>
+                                                <span class="badge bg-success">Verified</span>
+                                            <%}else{ %>
+                                                <span class="badge bg-warning"><%= user.AccountStatus %></span>
+                                            <% } %>
+                                         </td>
+                                        <td>
+                                            <% if(user.isStaff==='True'){ %>
+                                                <span class="badge bg-success">Staff</span>
+                                            <%}else{ %>
+                                                <span class="badge bg-warning">Not Staff</span>
+                                            <% } %>
+                                        </td>
+                                        <td>
+                                            <span class="badge bg-warning"><%= user.Followers %></span>
+                                        </td>
+                                        <td>
+                                            <% if(user.AccountStatus==='Verified' || user.AccountStatus==='Unverified'){ %>
+                                                <a href="/deactivate/user/<%= user?._id %>" class="badge bg-danger">deactivate</a>
+                                                <a href="/ban/user/<%= user?._id %>" class="badge bg-danger">Ban User</a>
+                                            <%}else{ %>
+                                                <a href="/activate/user/<%= user?._id %>" class="badge bg-warning">activate</a>
+                                            <% } %>
+                                            <% if(user.AccountStatus==='Verified' ){ %>
+                                                <% if(user.isStaff==='True' ){ %>
+                                                    <a href="/removeAdmin/user/<%= user?._id %>" class="badge bg-primary">Remove Staff</a>
+                                                <%}else{%>
+                                                    <a href="/makeAdmin/user/<%= user?._id %>" class="badge bg-success">make Staff</a>
+                                                <%} %>
+                                            <%}%>
+                                            <a href="/reset/user/<%= user?.emailAddress %>" class="badge bg-warning">reset Password</a>
+                                        </td>
+                                    </tr>
+                                <% id=id+1; }) %>
+                            <% }else{ %>
+                                <tr>
+                                    <td colspan="8" class="text-white bg-danger"> No Users Available</td>
+                                </tr>
+                            <% } %>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<%- include('../../../Layouts/Backend/Footer.ejs') %>
