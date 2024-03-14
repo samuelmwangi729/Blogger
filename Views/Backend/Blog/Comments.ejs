@@ -18,7 +18,9 @@
                                     <td>Blog</td>
                                     <td>User</td>
                                     <td>Status</td>
+                                    <% if(user.UserRole==='Admin'){ %>
                                     <td>Actions</td>
+                                    <%} %>
                                 </tr>
                             </thead>
                             <tbody>
@@ -40,10 +42,12 @@
                                                     <%} %>
                                             
                                             </td>
+                                            <% if(user.UserRole==='Admin'){ %>
                                             <td>
                                                 <a  class="btn btn-sm btn-success" onclick="WorkOnComment('Approve','<%= comment?._id %>')">Approve</a>
                                                 <a  class="btn btn-sm btn-danger" onclick="WorkOnComment('Remove','<%= comment?._id %>')">Delete</a>
                                             </td>
+                                            <%} %>
                                         </tr>
                                     <%})%>
                                 <% }else { %> 

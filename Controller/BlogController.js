@@ -389,7 +389,12 @@ GetSingleArticle = asyncHandler(async (req,res)=>{
     res.render('Frontend/Articles',{categories,articles})
  }
  const getAllComments = asyncHandler(async(req,res)=>{
-    const comments = await Comment.find()
+    let comments =[]
+    if(res.locals.user.UserRole==='Admin'){
+        comments = await Comment.find()
+    }else{
+        comments = await Comment.find({userEmail:res.locals.user.emailAddress})
+    }
     res.render('Backend/Blog/Comments',{comments})
  })
  WorkOnComments = asyncHandler(async(req,res)=>{

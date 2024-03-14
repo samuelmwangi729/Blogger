@@ -3,82 +3,88 @@
     <!-- main body content goes here -->
     <div class="container border-top p-2">
         <div class="row">
-            <div class="col-sm-4">
-                <div class="card">
-                    <div class="card-header bg-white">
-                        <h2 class="text-center">
-                            Create New Category
-                        </h2>
-                    </div>
-                    <div class="card-body">
-                        <div class="form">
-                            <form id="categoriesForm" enctype="multipart/form-data">
-                                <span id="errorSpan" class="text-danger"></span>
-                                <div class="form-group">
-                                    <label for="Category Name" class="label-control">Category Name</label>
-                                    <input type="text" name="CategoryName" id="CategoryName" class="form-control">
-                                </div>
-                                <div class="form-group">
-                                    <label for="Category Icon" class="label-control">Category Icon</label>
-                                    <input type="file" name="CategoryIcon" id="CategoryIcon" class="form-control" accept="image/*">
-                                </div>
-                                <div class="form-group">
-                                    <label for="Category Type" class="label-control">Category Type</label>
-                                    <select name="CategoryType" id="CategoryType" class="form-control">
-                                        <option label="--select Category Type"></option>
-                                        <option value="Blog">Blog</option>
-                                        <option value="Product">Product</option>
-                                        <option value="Others">Others</option>
-                                    </select>
-                                </div>
-                                <div class="row">
-                                    <div class="col-sm-6 offset-sm-3">
-                                        <button class="btn btn-success btn-block mt-2" type="submit">Add Category</button>
+            <% if(user.UserRole==='Admin'){ %>
+                <div class="col-sm-4">
+                    <div class="card">
+                        <div class="card-header bg-white">
+                            <h2 class="text-center">
+                                Create New Category
+                            </h2>
+                        </div>
+                        <div class="card-body">
+                            <div class="form">
+                                <form id="categoriesForm" enctype="multipart/form-data">
+                                    <span id="errorSpan" class="text-danger"></span>
+                                    <div class="form-group">
+                                        <label for="Category Name" class="label-control">Category Name</label>
+                                        <input type="text" name="CategoryName" id="CategoryName" class="form-control">
                                     </div>
-                                </div>
-                            </form>
+                                    <div class="form-group">
+                                        <label for="Category Icon" class="label-control">Category Icon</label>
+                                        <input type="file" name="CategoryIcon" id="CategoryIcon" class="form-control" accept="image/*">
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="Category Type" class="label-control">Category Type</label>
+                                        <select name="CategoryType" id="CategoryType" class="form-control">
+                                            <option label="--select Category Type"></option>
+                                            <option value="Blog">Blog</option>
+                                            <option value="Product">Product</option>
+                                            <option value="Others">Others</option>
+                                        </select>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-sm-6 offset-sm-3">
+                                            <button class="btn btn-success btn-block mt-2" type="submit">Add Category</button>
+                                        </div>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="card">
+                        <div class="card-header bg-white">
+                            <h2 class="text-center">
+                                Create New Sub Category
+                            </h2>
+                        </div>
+                        <div class="card-body">
+                            <div class="form">
+                                <form id="SubcategoriesForm">
+                                    <span id="errorSpan2" class="text-danger"></span>
+                                    <div class="form-group">
+                                        <label for="Category Name" class="label-control">Category Name</label>
+                                        <select name="categoryName" id="categoryName">
+                                            <option label="--select Category--"></option>
+                                            <% if(categories){ %>
+                                                <% categories.map(item=>{%>
+                                                    <option value="<%= item.categoryName %>"><%= item.categoryName %></option>
+                                                <%})%>
+                                            <%}else{ %>
+                                                <option label="--No Categories Present--"></option>
+                                            <%}%>
+                                        </select>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="Category Type" class="label-control">Sub Category</label>
+                                        <input type="text" name="subcategoryName" id="subCategory" class="form-control" placeholder="Add SubCategory">
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-sm-6 offset-sm-3">
+                                            <button class="btn btn-success btn-block mt-2" type="submit">Add S.Category</button>
+                                        </div>
+                                    </div>
+                                </form>
+                            </div>
                         </div>
                     </div>
                 </div>
-                <div class="card">
-                    <div class="card-header bg-white">
-                        <h2 class="text-center">
-                            Create New Sub Category
-                        </h2>
-                    </div>
-                    <div class="card-body">
-                        <div class="form">
-                            <form id="SubcategoriesForm">
-                                <span id="errorSpan2" class="text-danger"></span>
-                                <div class="form-group">
-                                    <label for="Category Name" class="label-control">Category Name</label>
-                                    <select name="categoryName" id="categoryName">
-                                        <option label="--select Category--"></option>
-                                        <% if(categories){ %>
-                                            <% categories.map(item=>{%>
-                                                <option value="<%= item.categoryName %>"><%= item.categoryName %></option>
-                                            <%})%>
-                                        <%}else{ %>
-                                            <option label="--No Categories Present--"></option>
-                                        <%}%>
-                                    </select>
-                                </div>
-                                <div class="form-group">
-                                    <label for="Category Type" class="label-control">Sub Category</label>
-                                    <input type="text" name="subcategoryName" id="subCategory" class="form-control" placeholder="Add SubCategory">
-                                </div>
-                                <div class="row">
-                                    <div class="col-sm-6 offset-sm-3">
-                                        <button class="btn btn-success btn-block mt-2" type="submit">Add S.Category</button>
-                                    </div>
-                                </div>
-                            </form>
-                        </div>
-                    </div>
-                </div>
-            </div>
+            <%} %>
             <!--Display the categories in the remaining part of the page-->
-            <div class="col-sm-8">
+            <% if(user.UserRole==='Admin'){ %>
+                <div class="col-sm-8">
+            <%}else{ %>
+                    <div class="col-sm-12">
+            <%}%>
                 <div class="card">
                     <div class="card-header">
                         <h3 class="text-center">
@@ -92,9 +98,13 @@
                                     <tr>
                                         <th>Icon</th>
                                         <th>Category</th>
-                                        <th>Type</th>
+                                        <% if(user.UserRole==='Admin'){ %>
+                                            <th>Type</th>
+                                        <%} %>
                                         <th>Status</th>
+                                        <% if(user.UserRole==='Admin'){ %>
                                         <th>Actions</th>
+                                        <%} %>
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -115,9 +125,11 @@
                                                 <td>
                                                     <%= item.categoryName %>
                                                 </td>
+                                                <% if(user.UserRole==='Admin'){ %>
                                                 <td>
                                                     <%= item.categoryType %>
                                                 </td>
+                                                <% } %>
                                                 <td>
                                                     <% if(item.categoryStatus==='Active'){%>
                                                         <span class="badge bg-warning">
@@ -129,20 +141,22 @@
                                                         </span>
                                                     <%}%>
                                                 </td>
-                                                <td>
-                                                    <% if(item.categoryStatus==='Active'){%>
-                                                        <span class="badge bg-danger" onclick="Propagate('<%= item?._id %>','Suspend','cat')">
-                                                            Suspend
+                                                <% if(user.UserRole==='Admin'){ %>
+                                                    <td>
+                                                        <% if(item.categoryStatus==='Active'){%>
+                                                            <span class="badge bg-danger" onclick="Propagate('<%= item?._id %>','Suspend','cat')">
+                                                                Suspend
+                                                            </span>
+                                                        <%}else{%>
+                                                            <span class="badge bg-warning" onclick="Propagate('<%= item?._id %>','Activat','cat')">
+                                                                Activate
+                                                            </span>
+                                                        <%}%>
+                                                        <span class="badge bg-primary" onclick="Propagate('<%= item?._id %>','Delet','cat')">
+                                                            Delete
                                                         </span>
-                                                    <%}else{%>
-                                                        <span class="badge bg-warning" onclick="Propagate('<%= item?._id %>','Activat','cat')">
-                                                            Activate
-                                                        </span>
-                                                    <%}%>
-                                                    <span class="badge bg-primary" onclick="Propagate('<%= item?._id %>','Delet','cat')">
-                                                        Delete
-                                                    </span>
-                                                </td>
+                                                    </td>
+                                                <%} %>
                                             </tr>
                                         <%})%>
                                     <%}%>
@@ -164,7 +178,9 @@
                                     <tr>
                                         <th>Category</th>
                                         <th>Status</th>
-                                        <th>Actions</th>
+                                        <% if(user.UserRole==='Admin'){ %>
+                                            <th>Actions</th>
+                                        <%} %>
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -196,20 +212,22 @@
                                                         </span>
                                                     <%}%>
                                                 </td>
-                                                <td>
-                                                    <% if(itemc.subCategoryStatus==='Active'){%>
-                                                        <span class="badge bg-danger" onclick="Propagate('<%= itemc?._id %>','Suspend','subcat')">
-                                                            Suspend
+                                                <% if(user.UserRole==='Admin'){ %>
+                                                    <td>
+                                                        <% if(itemc.subCategoryStatus==='Active'){%>
+                                                            <span class="badge bg-danger" onclick="Propagate('<%= itemc?._id %>','Suspend','subcat')">
+                                                                Suspend
+                                                            </span>
+                                                        <%}else{%>
+                                                            <span class="badge bg-warning" onclick="Propagate('<%= itemc?._id %>','Activat','subcat')">
+                                                                Activate
+                                                            </span>
+                                                        <%}%>
+                                                        <span class="badge bg-primary" onclick="Propagate('<%= itemc?._id %>','Delet','subcat')">
+                                                            Delete
                                                         </span>
-                                                    <%}else{%>
-                                                        <span class="badge bg-warning" onclick="Propagate('<%= itemc?._id %>','Activat','subcat')">
-                                                            Activate
-                                                        </span>
-                                                    <%}%>
-                                                    <span class="badge bg-primary" onclick="Propagate('<%= itemc?._id %>','Delet','subcat')">
-                                                        Delete
-                                                    </span>
-                                                </td>
+                                                    </td>
+                                                <%} %>
                                             </tr>
                                         <%})%>
                                     <%}%>

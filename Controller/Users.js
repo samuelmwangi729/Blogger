@@ -4,14 +4,21 @@ const sendEmail =  require("../Utils/ActionEmail")
 const {loadCategories} = require('./HomeController')
 const { response } = require("express")
 ViewUsers = async(req,res)=>{
-    const message=""
-    const users = await User.find({},{
-        Password: 0,
-        createdAt: 0,
-        updatedAt: 0,
-        __v: 0
-    })
-    res.render('Backend/Users/All.ejs',{users,message})
+    //check if the logged in user is an admin 
+    console.log(res.locals.user)
+    if(res.locals.user.UserRole==='Admin' && res.locals.user.isStaff==='True'){
+        const message=""
+        const users = await User.find({},{
+            Password: 0,
+            createdAt: 0,
+            updatedAt: 0,
+            __v: 0
+        })
+        res.render('Backend/Users/All.ejs',{users,message})
+    }else{
+        res.redirect("/Dashboard")
+    }
+    
 }
 DeactivateUser = asyncHandler (async(req,res)=>{
     let message=""

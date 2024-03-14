@@ -4,11 +4,11 @@
     <div class="row">
         <div class="col-sm-6 offset-sm-3">
             <div class="form-group">
-                <form id="resetPassword" method="get">
+                <form  method="post" action="/Verify/Account/Local">
                     <fieldset class="border border-danger rounded">
                         <legend>
                             <h2 class="text-center">
-                                To Continue, Verify Your Email
+                                To Continue, Verify Your Emailsss
                             </h2>
                         </legend>
                         <div class="card border-0">
@@ -41,38 +41,3 @@
     </div>
 </div>
 <%- include('../../Layouts/Frontend/Footer.ejs') %>
-<script>
-    const form = document.querySelector("form#resetPassword")
-    //then get the email 
-    form.addEventListener("submit", async (e) => {
-        e.preventDefault()
-        const email = document.querySelector("input#email").value
-        const url = "/reset-password"
-        const data = {
-            email: email
-        }
-        if(!email){
-            //email must be there 
-            document.querySelector("#errorText").innerHTML = "Email is required"
-            document.querySelector('input#email').classList.add("errorClass")
-            return;
-        }
-        const res = await fetch(url,{
-            method:'POST',
-            body:JSON.stringify(data),
-            headers:{
-                'Content-Type': 'application/json'
-            }
-        })
-        form.reset()
-        const resp = await res.json()
-        console.log(resp)
-        if(resp.status==='success'){
-            document.querySelector("#errorText").innerHTML = resp.message
-            document.querySelector('#errorText').classList.remove("text-danger")
-            document.querySelector('#errorText').classList.add("text-success")
-        }else{
-            document.querySelector("#errorText").innerHTML = resp.message
-        }
-    })
-</script>

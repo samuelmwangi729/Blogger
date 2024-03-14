@@ -73,6 +73,12 @@ const getProfileData = async(req,res)=>{
 VerifyAccount = async(req,res)=>{
     const email = res.locals.user.emailAddress
     const user = await User.findOne({emailAddress:email})
+    //if there are any previous tokens, set them to used
+    const tokens = await Token.find({user:user.emailAddress})
+    tokens.forEach(item=>{
+        item.Status="Expired"
+        item.save()
+    })
     const vtoken = generateRandom(6)
     const newToken = new Token({
         token:vtoken,
@@ -270,4 +276,23 @@ const GetSubCategories = async(req,res)=>{
         status,message
     })
 }
-module.exports = {Index,getProfileData,ProfileController,GetSubCategories,PropagateEvent,getUploadedCategories,getVerificationToken,VerifyAccount,Categories}
+getLocalVerificationDetails = async(req,res)=>{
+    const {verificationToken} = req.body
+    //check the token
+    const token  = await Token.findOne({token:verificationToken})
+    console.log(token)
+    if(token && token.Status==='Active'){
+        //the token is owned by the logged in user
+        token.Status="Used"
+        token.save()
+        //update the user 
+        const user = await User.findOne({emailAddress:token.user})
+        user.AccountStatus = "Verified"
+        user.save()
+        res.redirect("/Dashboard")
+    }else{
+        res.redirect("/")
+    }
+}
+module.exports = {Index,getProfileData,ProfileController,GetSubCategories,PropagateEvent,getUploadedCategories,
+    getVerificationToken,VerifyAccount,Categories,getLocalVerificationDetails}

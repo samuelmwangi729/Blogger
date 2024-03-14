@@ -30,7 +30,6 @@ const AUTH_OPTIONS = {
     clientSecret:process.env.GOOGLE_OAUTH_SECRET
 }
 const verifyCallback = (accessToken,refreshToken,profile,done)=>{
-    console.log(profile)
     done(null,profile)
 }
 passport.use(new Strategy(AUTH_OPTIONS,verifyCallback))
