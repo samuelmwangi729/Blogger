@@ -1223,7 +1223,10 @@ Blog
 	border-bottom-right-radius: 0;
 	border-bottom-left-radius: 0;
 }
-
+.pq-post-media img{
+	width: 100%;
+	height: 35vh;
+}
 .pq-blog-post .pq-post-media img {
 	transform: scale(1);
 	transition: 0.5s ease-in-out;

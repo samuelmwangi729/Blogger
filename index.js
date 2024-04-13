@@ -6,6 +6,7 @@ const homeRouter = require('./Routes/Home')
 const AuthenticatedRoutes = require('./Routes/AuthenticatedRoutes')
 const ConnectToMongo = require('./Utils/DatabaseConnector')
 const UploadImage = require('./Utils/UploadImage');
+const blogs = require('./Models/Blog')
 const blogRoutes = require('./Routes/BlogRoutes')
 const isGuest = require('./Middlewares/Guest')
 const {loadCategories} = require("./Controller/HomeController")
@@ -18,10 +19,12 @@ const app = express()
 const path = require('path')
 //let the server run on port 8080
 app.get("*", async (req, res,next) =>{
+    const homeBlogs  = await blogs.find({blogStatus:'Published'}).sort({createdAt:-1}).limit(3)
     res.locals.apptitle = process.env.APP_TITLE
     res.locals.categories =[]
     res.locals.errorMessage=""
     res.locals.moment = moment
+    res.locals.footerBlogs = homeBlogs
     next()
 })
 const AUTH_OPTIONS = {

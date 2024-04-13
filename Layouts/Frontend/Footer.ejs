@@ -7,8 +7,10 @@
                     <div class="col-xl-3 col-md-6">
                         <div class="widget">
                             <img src="/images/logos/footer-logo.png" class="pq-footer-logo" alt="gym-footer-logo">
-                            <p>There are many variations of passages of Lorem Ipsum available, but the majority have
-                                suffered.</p>
+                            <p>
+                                We are a start up company which is devoting all its resources to ensure that people all over the world
+                                get access to knowledge as skills free of charge. Call us TechPoint. Your Study Patner
+                            </p>
                             <div class="pq-footer-social">
                                 <ul>
                                     <li><a href="#"><i class="fab fa-facebook-f"></i></a></li>
@@ -49,19 +51,19 @@
                             <div class="menu-useful-link-container">
                                 <ul id="menu-usefull-link" class="menu">
                                     <li>
-                                        <a href="#">Fact Search Engine</a>
+                                        <a href="/About">About Us</a>
                                     </li>
                                     <li>
-                                        <a href="#">Learn and Code</a>
+                                        <a href="/Dashboard">My Account</a>
                                     </li>
                                     <li>
-                                        <a href="#">Video Sharing Website</a>
+                                        <a href="/Blog">Blog</a>
                                     </li>
                                     <li>
-                                        <a href="#">File &amp; URL Scanner</a>
+                                        <a href="/Logout">Logout</a>
                                     </li>
                                     <li>
-                                        <a href="#">Online Software Package</a>
+                                        <a href="/">Home</a>
                                     </li>
                                 </ul>
                             </div>
@@ -70,32 +72,26 @@
                     <div class="col-xl-3  col-md-6">
                         <div class="pq-widget-menu widget">
                             <h4 class="footer-title">Recent post</h4>
-                            <div class="pq-footer-recent-post">
-                                <div class="pq-footer-recent-post-media">
-                                    <a href="app-promotes-sales-profits-in-it-solutions.html">
-                                        <img src="images/footer-blog/1.jpg" alt="">
-                                    </a>
+                            <% if(footerBlogs.length>0){%>
+                                <%footerBlogs.forEach(item=>{%>
+                                    <div class="pq-footer-recent-post">
+                                        <div class="pq-footer-recent-post-media">
+                                            <a href="/blog/<%= item.Slug %>">
+                                                <img src="<%= `Uploads/${item.FeaturedImage}` %>" alt="<%= item.Title %>" style="width: 80px;">
+                                            </a>
+                                        </div>
+                                        <div class="pq-footer-recent-post-info">
+                                            <h6><a href="/blog/<%= item.Slug %>"> <%= item.Title.substring(0,30)%>...</a></h6>
+                                            <a href="/blog/<%= item.Slug %>"
+                                                class="pq-post-date"> <%= moment(item.createdAt, "YYYYMMDD").fromNow(); %></a>
+                                        </div>
+                                    </div>
+                                <%})%>
+                            <%}else{ %> 
+                                <div class="alert alert-danger">
+                                    <strong>Error!</strong> Check Later
                                 </div>
-                                <div class="pq-footer-recent-post-info">
-                                    <h6><a href="app-promotes-sales-profits-in-it-solutions.html">App promotes sales
-                                            &amp; profits In It Solutions</a></h6>
-                                    <a href="app-promotes-sales-profits-in-it-solutions.html"
-                                        class="pq-post-date">January <span>26</span>, 2021 </a>
-                                </div>
-                            </div>
-                            <div class="pq-footer-recent-post">
-                                <div class="pq-footer-recent-post-media">
-                                    <a href="app-promotes-sales-profits-in-it-solutions.html">
-                                        <img src="images/footer-blog/2.jpg" alt="">
-                                    </a>
-                                </div>
-                                <div class="pq-footer-recent-post-info">
-                                    <h6><a href="app-promotes-sales-profits-in-it-solutions.html">In Depth Industry
-                                            &amp; Ecosystem Analysis</a></h6>
-                                    <a href="app-promotes-sales-profits-in-it-solutions.html"
-                                        class="pq-post-date">January <span>26</span>, 2021 </a>
-                                </div>
-                            </div>
+                            <%} %>
                         </div>
                     </div>
                 </div>

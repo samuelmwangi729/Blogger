@@ -4,6 +4,7 @@ const sendEmail = require('../Utils/EmailSender')
 const generateJwt = require('../Utils/generateToken')
 const generateRandom =  require('../Utils/genRandom')
 const Token = require('../Models/Tokens')
+const blogs  = require('../Models/Blog')
 const {Category,SubCategory} = require('../Models/Category')
 GetSubCategories = async(categoryName)=>{
     let sbr =[]
@@ -41,7 +42,9 @@ const loadCategories = async ()=>{
 }
 const Home = async (req, res) => {
     const categories = await loadCategories()
-    res.render('Frontend/home',{categories})
+    //load blog postst here 
+    const homeBlogs  = await blogs.find({blogStatus:'Published'}).sort({createdAt:-1}).limit(5)
+    res.render('Frontend/home',{categories,homeBlogs})
 }
 const About = async (req, res) => {
     const categories = await loadCategories()
