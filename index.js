@@ -72,11 +72,11 @@ app.post("/Edit-Article/Ckeditor/",fileupload({createParentPath:true}),(req,res)
 })
 app.use(AuthenticatedRoutes)
 const server  = app.listen(
-    process.env.PORT || 80,
+    process.env.PORT || 3000,
     () => {
         console.log("=================================")
         ConnectToMongo()
-        console.log('Server running on port 80')
+        console.log(`Server Running on Port ${process.env.PORT}`)
         console.log("=================================")
     }
 )
